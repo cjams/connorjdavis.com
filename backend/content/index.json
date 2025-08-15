@@ -1,0 +1,205 @@
+{
+  "posts": [
+    {
+      "filename": "2025-06-25-nth-order-effects.mdx",
+      "slug": "nth-order-effects",
+      "title": "Nth Order Effects",
+      "date": "2025-06-25T20:46:36",
+      "author": "Connor Davis",
+      "excerpt": "What do tariffs and the meteoric rise of Oliver Anthony have in common? One is a sledgehammer that the Trump administration is hell-bent in swinging to reorder global trade; the other is a country music star with a message dripping in populism. My aim is to show that both of these phenomena, while very different … ",
+      "reading_time": 19,
+      "categories": [
+        "economics"
+      ],
+      "tags": [
+        "economics",
+        "history"
+      ],
+      "status": "publish"
+    },
+    {
+      "filename": "2025-04-22-dopamine-whack-a-mole.mdx",
+      "slug": "dopamine-whack-a-mole",
+      "title": "Dopamine Whack-a-mole",
+      "date": "2025-04-22T17:57:22",
+      "author": "Connor Davis",
+      "excerpt": "Have you ever told yourself that you’re going to cut back on social media use or some other compulsive behavior? And you actually succeed in cutting back, only to discover that your brain sneakily found some other thing to do compulsively instead. Something that otherwise you rarely do steps in to replace the original bad … ",
+      "reading_time": 1,
+      "categories": [
+        "journal"
+      ],
+      "tags": [],
+      "status": "publish"
+    },
+    {
+      "filename": "2025-04-11-book-review-the-creative-act.mdx",
+      "slug": "book-review-the-creative-act",
+      "title": "Book Review: The Creative Act",
+      "date": "2025-04-11T07:28:29",
+      "author": "Connor Davis",
+      "excerpt": "The Creative Act by Rick Rubin is a book that has been on my radar for a while. Since I’ve been scratching my creative itch lately, I decided to read it to see what it was all about. It ended up being one the best books I’ve ever read. It spoke directly to my soul. … ",
+      "reading_time": 7,
+      "categories": [
+        "book review"
+      ],
+      "tags": [
+        "creativity"
+      ],
+      "status": "publish"
+    },
+    {
+      "filename": "2025-03-11-platforms.mdx",
+      "slug": "platforms",
+      "title": "Platforms",
+      "date": "2025-03-11T12:36:50",
+      "author": "Connor Davis",
+      "excerpt": "Apple, Amazon, Google, and Microsoft have a combined market cap of around $9T at the time of writing (March 2025). What do all of these tech behemoths have in common? They are all platforms. A platform is a generic term for a specific business model that has been made possible with the Internet. Lately I’ve … ",
+      "reading_time": 18,
+      "categories": [
+        "economics"
+      ],
+      "tags": [
+        "AI",
+        "business",
+        "leverage"
+      ],
+      "status": "publish"
+    },
+    {
+      "filename": "2025-02-04-metaphors-and-the-infinite-game.mdx",
+      "slug": "metaphors-and-the-infinite-game",
+      "title": "Metaphors and the Infinite Game",
+      "date": "2025-02-04T07:45:43",
+      "author": "Connor Davis",
+      "excerpt": "There’s a book called Metaphors We Live By by George Lakoff and Mark Johnson that I recommend to anyone that asks for a good book to read. I buy extra copies and gift them to friends of mine. The premise is that metaphors are more than linguistic constructs we learn about in grade school – … ",
+      "reading_time": 11,
+      "categories": [
+        "journal"
+      ],
+      "tags": [
+        "infinite game",
+        "language"
+      ],
+      "status": "publish"
+    },
+    {
+      "filename": "2024-12-30-core-values-update.mdx",
+      "slug": "core-values-update",
+      "title": "Core Values &#8211; Update",
+      "date": "2024-12-30T13:53:51",
+      "author": "Connor Davis",
+      "excerpt": "I posted earlier this year on my core values. After about 4 months, I’ve thought about them more and have some changes as 2024 comes to a close: Thanks for reading, Connor",
+      "reading_time": 1,
+      "categories": [
+        "journal"
+      ],
+      "tags": [],
+      "status": "publish"
+    },
+    {
+      "filename": "2024-11-09-ouray-50-ish-ultramarathon.mdx",
+      "slug": "ouray-50-ish-ultramarathon",
+      "title": "Ouray 50-ish Ultramarathon",
+      "date": "2024-11-09T15:52:15",
+      "author": "Connor Davis",
+      "excerpt": "I had the opportunity to participate in the Ouray 50 ultramarathon in September. The Ouray 50 is kind of insane. Runners have 24 hours to run 50 miles with over 20,000 feet of elevation gain around the historic mining trails of Ouray in southwest Colorado. This was the second ultra I’ve done in my life. … ",
+      "reading_time": 29,
+      "categories": [
+        "journal"
+      ],
+      "tags": [],
+      "status": "publish"
+    },
+    {
+      "filename": "2024-09-23-book-review-mans-search-for-meaning.mdx",
+      "slug": "book-review-mans-search-for-meaning",
+      "title": "Book Review: Man&#8217;s Search for Meaning",
+      "date": "2024-09-23T18:08:21",
+      "author": "Connor Davis",
+      "excerpt": "Viktor Frankl’s Man’s Search for Meaning is a profound exploration of meaning in human life. The book begins with a harrowing account of the author’s personal experience in Nazi concentration camps. He uses this account to illustrate the distribution of prisoner personas that manifested as a result of the damaging influences of camp. The typical … ",
+      "reading_time": 5,
+      "categories": [
+        "book review"
+      ],
+      "tags": [],
+      "status": "publish"
+    },
+    {
+      "filename": "2024-08-13-book-review-the-myth-of-normal.mdx",
+      "slug": "book-review-the-myth-of-normal",
+      "title": "Book Review: The Myth of Normal",
+      "date": "2024-08-13T20:53:27",
+      "author": "Connor Davis",
+      "excerpt": "I recently finished The Myth of Normal by Dr. Gabor Mate. The book is a treatise on trauma; it describes at length what trauma is, the causes and effects of trauma, and how to heal from trauma. The lessons and insights from this book have provided me with a set of mental models and practices … ",
+      "reading_time": 10,
+      "categories": [
+        "book review"
+      ],
+      "tags": [
+        "attachment",
+        "figure-ground"
+      ],
+      "status": "publish"
+    },
+    {
+      "filename": "2024-07-22-core-values.mdx",
+      "slug": "core-values",
+      "title": "Core Values",
+      "date": "2024-07-22T00:35:34",
+      "author": "Connor Davis",
+      "excerpt": "I’ve decided to start a blog. Lately I’ve had this gut feeling that I should start writing. I think this comes from a need to integrate and express the ideas I become exposed to from media like books and podcasts. Where does this need come from? I believe it springs from one of my core … ",
+      "reading_time": 2,
+      "categories": [
+        "journal"
+      ],
+      "tags": [
+        "attachment"
+      ],
+      "status": "publish"
+    }
+  ],
+  "pages": [
+    {
+      "filename": "2024-09-25-mailing-list.mdx",
+      "slug": "mailing-list",
+      "title": "Mailing List",
+      "date": "2024-09-25T08:33:13",
+      "author": "Connor Davis",
+      "status": "publish"
+    },
+    {
+      "filename": "2024-09-29-privacy-policy.mdx",
+      "slug": "privacy-policy",
+      "title": "Privacy Policy",
+      "date": "2024-09-29T14:28:01",
+      "author": "Connor Davis",
+      "status": "publish"
+    },
+    {
+      "filename": "2024-08-02-about.mdx",
+      "slug": "about",
+      "title": "About",
+      "date": "2024-08-02T20:43:28",
+      "author": "Connor Davis",
+      "status": "publish"
+    }
+  ],
+  "categories": [
+    "book review",
+    "economics",
+    "journal"
+  ],
+  "tags": [
+    "AI",
+    "attachment",
+    "business",
+    "creativity",
+    "economics",
+    "figure-ground",
+    "history",
+    "infinite game",
+    "language",
+    "leverage"
+  ],
+  "generated_at": "2025-08-13T14:37:31.779068"
+}

@@ -1,0 +1,8 @@
+fastapi[standard]
+uvicorn[standard]
+python-multipart
+python-frontmatter
+markdown
+markdown-extensions
+pymdown-extensions
+jinja2
