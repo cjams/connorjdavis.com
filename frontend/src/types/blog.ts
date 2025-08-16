@@ -5,7 +5,6 @@ export interface Post {
   author: string;
   excerpt: string;
   reading_time: number;
-  categories: string[];
   tags: string[];
   content?: string;
   components?: Component[];
@@ -15,12 +14,6 @@ export interface Component {
   name: string;
   props: Record<string, any>;
   children?: string;
-}
-
-export interface Category {
-  name: string;
-  slug: string;
-  count?: number;
 }
 
 export interface Tag {

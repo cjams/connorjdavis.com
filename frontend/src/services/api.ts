@@ -1,4 +1,4 @@
-import type { Post, Category, Tag, PostListResponse } from "../types/blog";
+import type { Post, Tag, PostListResponse } from "../types/blog";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -24,10 +24,6 @@ class ApiService {
 
   async getPost(slug: string): Promise<Post> {
     return this.fetchJson<Post>(`/posts/${slug}`);
-  }
-
-  async getCategories(): Promise<Category[]> {
-    return this.fetchJson<Category[]>("/categories");
   }
 
   async getTags(): Promise<Tag[]> {

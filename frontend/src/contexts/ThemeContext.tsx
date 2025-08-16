@@ -1,16 +1,23 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import {
+  applyCustomTheme,
+  lightTheme,
+  darkTheme,
+  oceanTheme,
+  forestTheme,
+} from "../themes/themes";
 
-type Theme = "light" | "dark" | "system";
+type Theme = "light" | "dark" | "system" | "ocean" | "forest";
 
 interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
-  resolvedTheme: "light" | "dark";
+  resolvedTheme: "light" | "dark" | "system" | "ocean" | "forest";
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const useTheme = (): ThemeContextType => {
+const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (!context) {
     throw new Error("useTheme must be used within a ThemeProvider");
@@ -33,18 +40,19 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       const stored = localStorage.getItem("theme") as Theme;
       return stored || defaultTheme;
     }
+
     return defaultTheme;
   });
 
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  const [resolvedTheme, setResolvedTheme] = useState<Theme>("light");
 
   useEffect(() => {
     const root = document.documentElement;
 
     // Remove previous theme classes
-    root.classList.remove("light", "dark");
+    root.classList.remove("light", "dark", "ocean", "forest");
 
-    let resolvedThemeValue: "light" | "dark";
+    let resolvedThemeValue: "light" | "dark" | "ocean" | "forest";
 
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
@@ -56,8 +64,17 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       resolvedThemeValue = theme;
     }
 
-    // Add the resolved theme class
-    root.classList.add(resolvedThemeValue);
+    // Apply theme based on type using consistent applyCustomTheme function
+    if (resolvedThemeValue === "ocean") {
+      applyCustomTheme("ocean", oceanTheme);
+    } else if (resolvedThemeValue === "forest") {
+      applyCustomTheme("forest", forestTheme);
+    } else if (resolvedThemeValue === "light") {
+      applyCustomTheme("light", lightTheme);
+    } else if (resolvedThemeValue === "dark") {
+      applyCustomTheme("dark", darkTheme);
+    }
+
     setResolvedTheme(resolvedThemeValue);
 
     // Save theme to localStorage
@@ -70,11 +87,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = () => {
-      const root = document.documentElement;
-      root.classList.remove("light", "dark");
-
       const newResolvedTheme = mediaQuery.matches ? "dark" : "light";
-      root.classList.add(newResolvedTheme);
+
+      // Apply theme consistently using applyCustomTheme
+      if (newResolvedTheme === "dark") {
+        applyCustomTheme("dark", darkTheme);
+      } else {
+        applyCustomTheme("light", lightTheme);
+      }
+
       setResolvedTheme(newResolvedTheme);
     };
 
@@ -92,3 +113,5 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 };
+
+export { useTheme };

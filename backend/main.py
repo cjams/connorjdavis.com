@@ -37,7 +37,7 @@ def load_content_index():
     if index_file.exists():
         with open(index_file, 'r', encoding='utf-8') as f:
             return json.load(f)
-    return {"posts": [], "pages": [], "categories": [], "tags": []}
+    return {"posts": [], "pages": [], "tags": []}
 
 def load_post_content(filename: str, content_type: str = "posts"):
     """Load the full content of a post or page"""
@@ -68,14 +68,10 @@ async def root():
     return {"message": "Blog API is running"}
 
 @app.get("/posts")
-async def get_posts(page: Optional[int] = 1, per_page: Optional[int] = 10, limit: Optional[int] = None, category: Optional[str] = None, tag: Optional[str] = None):
+async def get_posts(page: Optional[int] = 1, per_page: Optional[int] = 10, limit: Optional[int] = None, tag: Optional[str] = None):
     """Get all posts with optional filtering and pagination"""
     index = load_content_index()
     posts = index['posts']
-    
-    # Filter by category
-    if category:
-        posts = [p for p in posts if category in p.get('categories', [])]
     
     # Filter by tag
     if tag:
@@ -159,12 +155,6 @@ async def get_page(slug: str):
         'full_metadata': page_content['metadata']
     }
 
-@app.get("/categories")
-async def get_categories():
-    """Get all categories"""
-    index = load_content_index()
-    return index['categories']
-
 @app.get("/tags")
 async def get_tags():
     """Get all tags"""
@@ -178,7 +168,6 @@ async def get_stats():
     return {
         'total_posts': len(index['posts']),
         'total_pages': len(index['pages']),
-        'total_categories': len(index['categories']),
         'total_tags': len(index['tags']),
         'last_updated': index.get('generated_at')
     }

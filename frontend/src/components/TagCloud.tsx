@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Tag } from "../types/blog";
 import apiService from "../services/api";
+import { Skeleton } from "./ui/skeleton";
 
 const TagCloud = () => {
   const [tags, setTags] = useState<Tag[]>([]);
@@ -43,28 +44,24 @@ const TagCloud = () => {
 
   const getTagColor = (index: number): string => {
     const colors = [
-      "bg-blue-100 text-blue-800 hover:bg-blue-200",
-      "bg-green-100 text-green-800 hover:bg-green-200",
-      "bg-purple-100 text-purple-800 hover:bg-purple-200",
-      "bg-pink-100 text-pink-800 hover:bg-pink-200",
-      "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
-      "bg-indigo-100 text-indigo-800 hover:bg-indigo-200",
-      "bg-gray-100 text-gray-800 hover:bg-gray-200",
+      "bg-primary-100 text-primary-700 hover:bg-primary-200",
+      "bg-success-100 text-success-700 hover:bg-success-200",
+      "bg-warning-100 text-warning-700 hover:bg-warning-200",
+      "bg-background-200 text-foreground-100 hover:bg-background-300",
+      "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      "bg-accent text-accent-foreground hover:bg-accent/80",
+      "bg-muted text-muted-foreground hover:bg-muted/80",
     ];
     return colors[index % colors.length];
   };
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-4 font-serif">
-          Tag Cloud
-        </h3>
+      <div className="bg-card rounded-lg shadow-md p-6">
+        <h3 className="text-lg text-foreground-100 mb-4 ">Tag Cloud</h3>
         <div className="flex flex-wrap gap-2">
           {[...Array(12)].map((_, i) => (
-            <div key={i} className="animate-pulse">
-              <div className="h-6 bg-gray-200 rounded-full w-16"></div>
-            </div>
+            <Skeleton key={i} className="h-6 w-16 rounded-full" />
           ))}
         </div>
       </div>
@@ -73,20 +70,16 @@ const TagCloud = () => {
 
   if (error) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-4 font-serif">
-          Tag Cloud
-        </h3>
-        <p className="text-red-600 text-sm">{error}</p>
+      <div className="bg-card rounded-lg shadow-md p-6">
+        <h3 className="text-lg text-foreground-100 mb-4 ">Tag Cloud</h3>
+        <p className="text-error-500 text-sm">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-bold text-gray-900 mb-4 font-serif">
-        Tag Cloud
-      </h3>
+    <div className="bg-card rounded-lg shadow-md p-6">
+      <h3 className="text-lg text-foreground-100 mb-4">Tag Cloud</h3>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag, index) => (
           <a

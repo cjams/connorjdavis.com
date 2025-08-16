@@ -10,6 +10,10 @@ export const ThemeToggle = () => {
       setTheme("dark");
     } else if (theme === "dark") {
       setTheme("system");
+    } else if (theme === "system") {
+      setTheme("ocean");
+    } else if (theme === "ocean") {
+      setTheme("forest");
     } else {
       setTheme("light");
     }
@@ -35,6 +39,10 @@ export const ThemeToggle = () => {
       case "dark":
         return "Switch to system theme";
       case "system":
+        return "Switch to ocean theme";
+      case "ocean":
+        return "Switch to forest theme";
+      case "forest":
         return "Switch to light theme";
       default:
         return "Toggle theme";
