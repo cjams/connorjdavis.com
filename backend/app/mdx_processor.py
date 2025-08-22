@@ -28,7 +28,6 @@ class MDXProcessor:
                 'pymdownx.inlinehilite',
                 'pymdownx.snippets',
                 'pymdownx.tabbed',
-                'nl2br',  # Convert line breaks to <br> tags
                 'attr_list',  # Allow attributes on elements
                 'def_list',  # Support definition lists
                 'footnotes',  # Support footnotes
