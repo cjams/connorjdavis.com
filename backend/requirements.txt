@@ -6,3 +6,4 @@ markdown
 markdown-extensions
 pymdown-extensions
 jinja2
+watchdog

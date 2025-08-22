@@ -4,7 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>mind and matter</title>
+    <style>
+      /* Initial background to prevent white flash */
+      body {
+        background-color: oklch(0.985 0 0);
+        transition: background-color 0.2s ease;
+      }
+
+      /* Respect user's dark mode preference */
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: oklch(0.141 0.005 285.823);
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

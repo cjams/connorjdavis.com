@@ -1,5 +1,6 @@
 import { Calendar, Clock, Tag } from "lucide-react";
 import type { Post } from "../types/blog";
+import TagBadge from "./TagBadge";
 
 interface PostCardProps {
   post: Post;
@@ -56,13 +57,12 @@ const PostCard = ({ post, onTagClick }: PostCardProps) => {
           <Tag className="w-4 h-4 text-foreground-800" />
           {/* tag badge */}
           {post.tags.slice(0, 5).map((tag) => (
-            <button
+            <TagBadge
               key={tag}
-              onClick={() => onTagClick?.(tag)}
-              className="inline-flex items-center px-2.5 py-0.5 rounded-xs text-xs font-medium bg-background-300 text-foreground-700 hover:cursor-pointer hover:bg-primary-600 hover:text-foreground-100 transition-colors duration-200"
-            >
-              {tag}
-            </button>
+              tag={tag}
+              variant="clickable"
+              onClick={onTagClick}
+            />
           ))}
           {post.tags.length > 5 && (
             <span className="text-xs text-foreground-400">

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import type { Post, PostListResponse } from "../types/blog";
 import apiService from "../services/api";
 import PostCard from "../components/PostCard";
@@ -9,6 +10,7 @@ import { ThemeToggle } from "../components/ThemeToggle";
 import { Skeleton } from "../components/ui/skeleton";
 
 const HomePage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +21,14 @@ const HomePage = () => {
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  // Initialize selected tags from URL parameters
+  useEffect(() => {
+    const tagParam = searchParams.get("tag");
+    if (tagParam) {
+      setSelectedTags([tagParam]);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -96,17 +106,31 @@ const HomePage = () => {
 
   const handleTagAdd = (tag: string) => {
     if (!selectedTags.includes(tag)) {
-      setSelectedTags((prev) => [...prev, tag]);
+      const newTags = [...selectedTags, tag];
+      setSelectedTags(newTags);
+      // Update URL to reflect the tag filter
+      setSearchParams({ tag });
     }
   };
 
   const handleTagRemove = (tag: string) => {
-    setSelectedTags((prev) => prev.filter((t) => t !== tag));
+    const newTags = selectedTags.filter((t) => t !== tag);
+    setSelectedTags(newTags);
+    // Update URL - if no tags left, remove the tag parameter
+    if (newTags.length === 0) {
+      searchParams.delete("tag");
+      setSearchParams(searchParams);
+    } else {
+      setSearchParams({ tag: newTags[0] }); // Keep first remaining tag
+    }
   };
 
   const handleClearSearch = () => {
     setSearchQuery("");
     setSelectedTags([]);
+    // Clear URL parameters
+    searchParams.delete("tag");
+    setSearchParams(searchParams);
   };
 
   if (loading) {
@@ -175,7 +199,7 @@ const HomePage = () => {
           <p className="text-foreground-300 mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="bg-primary-500 hover:bg-primary-600 text-primary-foreground font-bold py-2 px-4 rounded transition-colors duration-200"
+            className="bg-primary-500 hover:bg-primary-600 text-foreground font-bold py-2 px-4 rounded transition-colors duration-200"
           >
             Try Again
           </button>
@@ -209,7 +233,6 @@ const HomePage = () => {
               searchQuery={searchQuery}
               selectedTags={selectedTags}
               onSearchChange={handleSearchChange}
-              onTagAdd={handleTagAdd}
               onTagRemove={handleTagRemove}
               onClear={handleClearSearch}
               className="lg:sticky lg:top-8"

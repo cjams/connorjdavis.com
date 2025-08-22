@@ -1,0 +1,445 @@
+/* Custom Prose Styles for Blog Content */
+
+/* Enhanced spacing and readability */
+.prose {
+  /* Default prose styling */
+  @apply text-foreground-300;
+  line-height: 1.75;
+  font-size: 1rem;
+}
+
+/* Typography variants */
+.prose-sm {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.prose-lg {
+  font-size: 1.125rem;
+  line-height: 1.875;
+}
+
+.prose-xl {
+  font-size: 1.25rem;
+  line-height: 2;
+}
+
+/* Enhanced headings */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  @apply text-foreground font-bold;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  scroll-margin-top: 6rem; /* For anchor navigation */
+}
+
+.prose h1 {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.prose h2 {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+}
+
+.prose h4 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+}
+
+/* Enhanced paragraphs */
+.prose p {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.prose p:first-child {
+  margin-top: 0;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* Enhanced links */
+.prose a {
+  @apply text-primary;
+  transition: all 0.2s ease-in-out;
+}
+
+.prose a:hover {
+  @apply text-primary-400;
+  text-decoration-thickness: 1px;
+}
+
+.prose a:focus {
+  @apply outline-2 outline-offset-2 outline-primary;
+  border-radius: 0.125rem;
+}
+
+/* Enhanced lists */
+.prose ul,
+.prose ol {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding-left: 1.75rem;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.75;
+}
+
+.prose li > p {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose li > ul,
+.prose li > ol {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Enhanced blockquotes */
+.prose blockquote {
+  @apply border-l-4 border-primary bg-muted/30;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  border-radius: 0 0.5rem 0.5rem 0;
+  position: relative;
+}
+
+.prose blockquote::before {
+  content: '"';
+  @apply text-primary text-4xl;
+  position: absolute;
+  top: -0.5rem;
+  left: 1rem;
+  font-family: Georgia, serif;
+}
+
+.prose blockquote p {
+  margin: 0;
+  @apply text-muted-foreground;
+}
+
+.prose blockquote p:first-child {
+  padding-left: 1rem;
+}
+
+/* Enhanced code blocks */
+.prose code {
+  @apply bg-muted text-foreground px-2 py-1 rounded text-sm font-mono;
+  font-weight: 500;
+  border: 1px solid var(--border);
+}
+
+.prose pre {
+  @apply bg-muted text-foreground p-4 rounded-lg overflow-x-auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.prose pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Enhanced tables */
+.prose table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  @apply bg-background;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.prose thead {
+  @apply bg-muted;
+}
+
+.prose th {
+  @apply text-left font-semibold text-foreground;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.prose td {
+  @apply text-foreground;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+.prose tr:nth-child(even) {
+  @apply bg-muted/20;
+}
+
+/* Enhanced images */
+.prose img {
+  margin: 2rem auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border);
+  max-width: 100%;
+  max-height: 70vh;
+  height: auto;
+  display: block;
+}
+
+.prose figure {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.prose figcaption {
+  @apply text-muted-foreground text-sm mt-2;
+  font-style: italic;
+}
+
+/* Blog-specific figure styles */
+.prose .blog-figure {
+  margin: 2rem 0;
+  text-align: center;
+  display: block;
+}
+
+.prose .blog-figure img {
+  margin: 0 auto;
+  display: block;
+}
+
+.prose .blog-figure-caption {
+  @apply text-muted-foreground text-sm mt-3;
+  font-style: italic;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+.prose .blog-standalone-caption {
+  @apply text-muted-foreground text-sm;
+  font-style: italic;
+  text-align: center;
+  margin: 1rem 0;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Footnote styles */
+.prose .footnote-ref {
+  @apply text-primary;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  vertical-align: super;
+  margin-left: 0.125rem;
+}
+
+.prose .footnote-ref a {
+  @apply text-primary hover:text-primary-600;
+  text-decoration: none;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.prose .footnote-ref a:hover {
+  @apply bg-primary/10;
+  text-decoration: none;
+}
+
+/* TOC styling improvements */
+.mobile-toc-content a,
+.desktop-toc-content a {
+  @apply text-muted-foreground hover:text-foreground;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.mobile-toc-content a:hover,
+.desktop-toc-content a:hover {
+  text-decoration: none;
+}
+
+/* Remove bullets from TOC lists */
+.mobile-toc-content ul,
+.mobile-toc-content ol,
+.desktop-toc-content ul,
+.desktop-toc-content ol {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+/* Remove focus border from TOC links */
+.mobile-toc-content a:focus,
+.desktop-toc-content a:focus {
+  outline: none;
+  @apply bg-muted/50 rounded;
+}
+
+.prose .footnotes-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--border);
+}
+
+.prose .footnotes-title {
+  @apply text-lg font-semibold text-foreground mb-4;
+  margin-top: 0;
+}
+
+.prose .footnote-item {
+  @apply text-sm text-muted-foreground;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.prose .footnote-number {
+  @apply text-primary font-semibold;
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.prose .footnote-content {
+  display: inline;
+}
+
+.prose .footnote-backref {
+  @apply text-primary hover:text-primary-600;
+  text-decoration: none;
+  margin-left: 0.5rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.prose .footnote-backref:hover {
+  text-decoration: underline;
+}
+
+/* Horizontal rules */
+.prose hr {
+  @apply border-t border-border my-8;
+  border-top-width: 1px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .prose {
+    font-size: 0.9rem;
+  }
+
+  .prose h1 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .prose h3 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  .prose blockquote {
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+  }
+
+  .prose img {
+    margin: 1.5rem auto;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .prose img {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  }
+
+  .prose table {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .prose pre {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Focus and accessibility improvements */
+.prose *:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 0.125rem;
+}
+
+/* Print styles */
+@media print {
+  .prose {
+    color: black;
+    background: white;
+  }
+
+  .prose a {
+    color: black;
+    text-decoration: underline;
+  }
+
+  .prose img {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}

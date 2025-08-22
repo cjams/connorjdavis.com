@@ -1,13 +1,12 @@
-import { useState } from "react";
 import { Search, X } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Input } from "./ui/input";
+import TagBadge from "./TagBadge";
 
 interface SearchAndFilterProps {
   searchQuery: string;
   selectedTags: string[];
   onSearchChange: (query: string) => void;
-  onTagAdd: (tag: string) => void;
   onTagRemove: (tag: string) => void;
   onClear: () => void;
   className?: string;
@@ -17,13 +16,10 @@ const SearchAndFilter = ({
   searchQuery,
   selectedTags,
   onSearchChange,
-  onTagAdd,
   onTagRemove,
   onClear,
   className,
 }: SearchAndFilterProps) => {
-  const [isFocused, setIsFocused] = useState(false);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSearchChange(e.target.value);
   };
@@ -43,19 +39,12 @@ const SearchAndFilter = ({
           {selectedTags.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {selectedTags.map((tag) => (
-                <span
+                <TagBadge
                   key={tag}
-                  className="inline-flex items-center px-2.5 py-1 rounded-xs text-xs font-medium bg-primary-600 text-foreground-100 transition-colors duration-200"
-                >
-                  {tag}
-                  <button
-                    onClick={() => onTagRemove(tag)}
-                    className="ml-1 hover:bg-primary-700 rounded p-0.5 transition-colors duration-200"
-                    type="button"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
+                  tag={tag}
+                  variant="selected"
+                  onRemove={onTagRemove}
+                />
               ))}
             </div>
           )}
@@ -66,9 +55,7 @@ const SearchAndFilter = ({
               type="text"
               value={searchQuery}
               onChange={handleInputChange}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              className="rounded-xs"
+              className="pr-10 rounded-xs"
             />
 
             {/* Search/Clear Icon */}

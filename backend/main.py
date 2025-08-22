@@ -11,7 +11,13 @@ from pathlib import Path
 import json
 import frontmatter
 from typing import List, Optional, Dict, Any
+import threading
+import time
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
 from app.mdx_processor import MDXProcessor
+from app.index_generator import IndexGenerator
 
 app = FastAPI(title="Blog API", version="2.0.0")
 
@@ -26,10 +32,108 @@ app.add_middleware(
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
+# Mount media files directly for MDX image references
+app.mount("/media", StaticFiles(directory="static/media"), name="media")
 
 # Initialize MDX processor
 content_dir = Path("content")
 mdx_processor = MDXProcessor(content_dir)
+
+# Initialize index generator
+index_generator = IndexGenerator(content_dir)
+
+# File watcher for automatic index regeneration
+class ContentFileHandler(FileSystemEventHandler):
+    def __init__(self):
+        super().__init__()
+        self._last_regenerate = 0
+        self._regenerate_delay = 1  # seconds
+    
+    def on_modified(self, event):
+        if event.is_directory:
+            return
+        
+        # Only handle MDX files
+        if event.src_path.endswith('.mdx'):
+            self._schedule_regenerate()
+    
+    def on_created(self, event):
+        if event.is_directory:
+            return
+        
+        if event.src_path.endswith('.mdx'):
+            self._schedule_regenerate()
+    
+    def on_deleted(self, event):
+        if event.is_directory:
+            return
+        
+        if event.src_path.endswith('.mdx'):
+            self._schedule_regenerate()
+    
+    def _schedule_regenerate(self):
+        """Schedule index regeneration with debouncing"""
+        current_time = time.time()
+        if current_time - self._last_regenerate > self._regenerate_delay:
+            self._last_regenerate = current_time
+            # Use a separate thread to avoid blocking the file watcher
+            threading.Thread(target=self._regenerate_index, daemon=True).start()
+    
+    def _regenerate_index(self):
+        """Regenerate the content index"""
+        try:
+            print("🔄 Detected MDX file changes, regenerating index...")
+            index_generator.generate_and_save()
+            print("✅ Content index regenerated successfully")
+        except Exception as e:
+            print(f"❌ Error regenerating index: {e}")
+
+# Global file watcher observer
+observer = None
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize file watcher on startup"""
+    global observer
+    
+    # Generate initial index
+    try:
+        print("🚀 Generating initial content index...")
+        index_generator.generate_and_save()
+    except Exception as e:
+        print(f"Warning: Could not generate initial index: {e}")
+    
+    # Start file watcher
+    try:
+        observer = Observer()
+        event_handler = ContentFileHandler()
+        
+        # Watch both posts and pages directories
+        posts_dir = content_dir / "posts"
+        pages_dir = content_dir / "pages"
+        
+        if posts_dir.exists():
+            observer.schedule(event_handler, str(posts_dir), recursive=False)
+            print(f"📁 Watching {posts_dir} for MDX changes...")
+        
+        if pages_dir.exists():
+            observer.schedule(event_handler, str(pages_dir), recursive=False)
+            print(f"📁 Watching {pages_dir} for MDX changes...")
+        
+        observer.start()
+        print("👀 File watcher started successfully")
+        
+    except Exception as e:
+        print(f"Warning: Could not start file watcher: {e}")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Stop file watcher on shutdown"""
+    global observer
+    if observer:
+        observer.stop()
+        observer.join()
+        print("🛑 File watcher stopped")
 
 # Load content index
 def load_content_index():

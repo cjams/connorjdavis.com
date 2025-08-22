@@ -8,12 +8,26 @@ export interface Post {
   tags: string[];
   content?: string;
   components?: Component[];
+  toc?: string;
+  footnotes?: Record<string, FootnoteInfo>;
 }
 
 export interface Component {
   name: string;
   props: Record<string, any>;
   children?: string;
+}
+
+export interface FootnoteInfo {
+  number: number;
+  original_number: string;
+}
+
+export interface Footnote {
+  id: string;
+  number: number;
+  content: string;
+  backref: string;
 }
 
 export interface Tag {
