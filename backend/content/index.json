@@ -1,6 +1,61 @@
 {
   "posts": [
     {
+      "filename": "2025-08-23-hacker.mdx",
+      "slug": "hacker",
+      "title": "hacker (n)",
+      "date": "2025-08-23T08:47:42",
+      "author": "Connor Davis",
+      "excerpt": null,
+      "reading_time": "X",
+      "tags": [
+        "hacking",
+        "complex-systems"
+      ],
+      "status": "publish"
+    },
+    {
+      "filename": "2025-08-22-lml1-nn.mdx",
+      "slug": "lml-1",
+      "title": "Learning Machine Learning - Neural Networks",
+      "date": "2025-08-22T11:53:42",
+      "author": "Connor Davis",
+      "excerpt": null,
+      "reading_time": "X",
+      "tags": [
+        "neural-networks",
+        "backpropogation",
+        "lml"
+      ],
+      "status": "draft"
+    },
+    {
+      "filename": "2025-08-23-react-native-encryption.mdx",
+      "slug": "client-side-encryption",
+      "title": "React Native Client-side Encryption",
+      "date": "2025-08-22T10:49:42",
+      "author": "Connor Davis",
+      "excerpt": null,
+      "reading_time": "X",
+      "tags": [
+        "react-native",
+        "how-to",
+        "encryption"
+      ],
+      "status": "draft"
+    },
+    {
+      "filename": "2025-08-22-life-lately.mdx",
+      "slug": "life-lately",
+      "title": "Life Lately",
+      "date": "2025-08-22T08:44:03",
+      "author": "Connor Davis",
+      "excerpt": "A quick update on life",
+      "reading_time": 1,
+      "tags": [],
+      "status": "draft"
+    },
+    {
       "filename": "2025-06-25-nth-order-effects.mdx",
       "slug": "nth-order-effects",
       "title": "Nth Order Effects",
@@ -157,14 +212,22 @@
   "tags": [
     "AI",
     "attachment",
+    "backpropogation",
     "business",
+    "complex-systems",
     "creativity",
     "economics",
+    "encryption",
     "figure-ground",
+    "hacking",
     "history",
+    "how-to",
     "infinite game",
     "language",
-    "leverage"
+    "leverage",
+    "lml",
+    "neural-networks",
+    "react-native"
   ],
-  "generated_at": "2025-08-22T07:28:00.589579"
+  "generated_at": "2025-08-23T11:30:02.276057"
 }

@@ -1,0 +1,43 @@
+---
+author: Connor Davis
+categories:
+  - technical
+date: "2025-08-22T10:49:42"
+excerpt:
+reading_time: X
+slug: client-side-encryption
+status: draft
+tags: [react-native, how-to, encryption]
+title: React Native Client-side Encryption
+---
+
+How many times have you read about data breaches online? It seems like every other day there is another
+headline of some [company](https://www.nbcnews.com/tech/social-media/tea-app-hacked-13000-photos-leaked-4chan-call-action-rcna221139)
+or [govenment](https://www.csoonline.com/article/566509/the-opm-hack-explained-bad-security-practices-meet-chinas-captain-america.html)
+leaking peoples' data due to their database getting hacked.
+
+In most conventional app designs, the user's data is stored as-is in the backend database. If an attacker
+can find a way to access the database on the backend server, they gain access to all that user data.
+
+Client-side encryption (CSE) is one mitigation for this. With CSE, all user data is encrypted on _their own device_
+before being sent to the backend server. The backend never has access to the user's encryption key, and only sees
+the encrypted version of the user data. This means that even though the backend may have exploitable bugs that allow an
+attacker to gain access to it, there is no value in doing so[^1]. This is because the user data lies encrypted in the database
+and is therefore unintelligible to the attacker.
+
+In this post I'm going to explain how to implement client-side encryption (CSE) for mobile applications, specifically those
+written in React Native.
+
+We'll start with a brief intro to encryption and React Native fundamentals. Next we'll undertand how data is
+typically handled in a client-server architecture for everday apps and how CSE differs
+from the traditional approach. Then I'll explain the key components of the CSE architecture,
+including flows for key generation, encryption, and decryption.
+
+Let's Go!
+
+# React Native
+
+[^1]:
+    At least it isn't valueable from the perspective of user data. The server may have other sensitive information like
+    intellectual property, or may sit in a privileged part of the network and allow for lateral movement.
+    The server itself could be used for bots or generating DDoS traffic.

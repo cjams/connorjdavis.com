@@ -1,0 +1,82 @@
+---
+author: Connor Davis
+categories:
+- journal
+date: '2025-08-22T08:44:03'
+excerpt: A quick update on life
+status: draft
+slug: life-lately
+title: Life Lately
+---
+
+This is my first post in a while.
+
+Lately I've been developing a [mushroom growing app](https://github.com/mycomize/grow-app). This is an open-source
+project that enables citizen science for mushroom growing. For a while now, I have wanted a
+tool that allows me to keep track of my grows and to run experiments with various
+controllable parameters. I've also wanted to be able to learn from others' techniques
+more effectively. There are plenty of forums online for sharing, however it is difficult
+to rigourously repeat what others have done, as the sharing tends to happen in unstructured
+natural language and often lacks critical details needed for repeatability.
+
+The app has three conceptual sections: Grows, Teks, and IoT Gateways. The Grows
+section provides grow management. You can add/remove grows, schedule tasks, view grow
+progress and key characterstics health status and cost. The app focuses on bulk grows for
+the initial version. Each grow has 5 stages, and the user can add items, environmental conditions, tasks, notes, and IoT Gateway controls to each stage.
+
+Teks are similar to grows, but they are a more "abstract" version, similar to a recipe vs
+doing the actual cooking. Teks are portable instructions that can be shared and instantiated
+into actual grows.
+
+IoT Gateways are connections to Internet-of-Things (IoT) sensor hubs. For the initial
+version, [Home Assistant](https://www.home-assistant.io/) is the only one supported.
+I chose Home Assistant because it is a widely used free and open-source home automation platform and
+is one I'm fairly familiar with. You can connect many different sensors, especially those relevant
+to providing optimal mushroom growing conditions (temperature, humidity, carbon dioxide, light, etc).
+You can also write custom automations, so that you can react to the environment changing. For example,
+if the spawn incubator temperature falls too low, it can trigger a heat mat to turn on to bring it
+back into optimal range. Home Assistant also supports cameras and embedded controllers such as
+ESPHome, and it is extendible so support can be added for just about anything if it doesn't exist already.
+I feel there is a ton of untapped potential for experimentation and building cool things with this in
+the mushroom cultivation world.
+
+The IoT Gateway connects to the Home Assistant API and receives
+real-time updates over WebSockets. All the controls, sensors, and automations are accesible from
+within app. They can be linked to specific grow stages for different tasks, like enforcing environmental
+conditions (e.g. temperature range), or detecting anomalies in sensor values (e.g. discoloration,
+spikes of volatile organic compounds, etc.).
+
+These three sections will be present in the first version of the app, as it is already getting pretty
+complex. Later I would like to add "Lab" section that provides first-class support for running
+experiments. You should be able to have a grow, and tweak some aspect of it, say a different substrate
+material, or a slightly higher temperature range during bulk colonization, or more light. The space of
+potential experimental inputs is massive here, so provding a clean "diffing" mechanism that allows the
+user to easily compare and contrast the control vs experiemental variables and track how they effect
+the outputs like yield is what I'm thinking of.
+
+In the near future I will be publishing posts that dive into some of the technical designs that
+I've made for the app as they are applicable to more than just mushroom growing.
+
+---
+
+Lately I've been thinking about work, my relationship to it, and what it means to do great work.
+Work is important to me, and I've learned over the past 2 years or so that doing *great* work
+is really important to my wellbeing. I feel like shit when I know inside that I haven't lived up to my potential.
+I've read a lot books lately related to work, some of which I've [written](/posts/book-review-the-creative-act)
+[about](/posts/book-review-mans-search-for-meaning) and [others I haven't](https://www.amazon.com/Tiny-Experiments-Freely-Goal-Obsessed-World/dp/0593715136) (yet), that have helped me reframe what it means
+to work and work well. Paul Graham's [take on work](https://paulgraham.com/greatwork.html)
+has been especially influential on me.
+
+Strangely, work tends to get a bad rap in today's society. Ambition has become somewhat of a dirty
+word. But I think a lot of this is because people conflate their job (or, if they are young, school)
+with work. And if your job sucks, or you're learning things in school that you have zero interest in,
+then naturally you're going to dread going to "work". You are going to resort to language such as
+I _have_ to go to work tomorrow, rather than I _get_ to go to work tomorrow. The underlying
+[metaphor](/posts/metaphors-and-the-infinite-game) is that WORK IS A NECESSARY EVIL. Something to put up with.
+Something that society forces us into.
+
+Through my reading and reflection, I've come to change that metaphor. For me, WORK IS A SPIRITUAL OPPORTUNITY.
+
+
+
+
