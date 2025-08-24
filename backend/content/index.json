@@ -193,18 +193,18 @@
       "status": "publish"
     },
     {
-      "filename": "2024-09-29-privacy-policy.mdx",
-      "slug": "privacy-policy",
-      "title": "Privacy Policy",
-      "date": "2024-09-29T14:28:01",
-      "author": "Connor Davis",
-      "status": "publish"
-    },
-    {
       "filename": "2024-08-02-about.mdx",
       "slug": "about",
       "title": "About",
       "date": "2024-08-02T20:43:28",
+      "author": "Connor Davis",
+      "status": "publish"
+    },
+    {
+      "filename": "2024-09-29-privacy-policy.mdx",
+      "slug": "privacy-policy",
+      "title": "Privacy Policy",
+      "date": "2024-09-29T14:28:01",
       "author": "Connor Davis",
       "status": "publish"
     }
@@ -229,5 +229,5 @@
     "neural-networks",
     "react-native"
   ],
-  "generated_at": "2025-08-23T11:30:02.276057"
+  "generated_at": "2025-08-24T00:48:55.695529"
 }

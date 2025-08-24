@@ -215,8 +215,9 @@ const HomePage = () => {
         <div className="flex justify-between items-center w-full py-6">
           <div className="px-4 sm:px-6 lg:px-8 flex-1">
             <h1 className="text-xl md:text-2xl text-foreground-800">
-              mind and matter
+              connorjdavis.com
             </h1>
+            <p className="text-foreground-700">a peek inside my kaleidoscope of interests</p>
           </div>
           <div className="px-4 sm:px-6 lg:px-8 flex-shrink-0">
             <ThemeToggle />

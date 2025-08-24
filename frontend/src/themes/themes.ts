@@ -514,7 +514,6 @@ export const forestTheme: ThemeColors = {
 export const applyCustomTheme = (
   themeName: string,
   colors: ThemeColors,
-  isDark = false
 ) => {
   const root = document.documentElement;
 

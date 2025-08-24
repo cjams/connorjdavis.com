@@ -39,7 +39,7 @@ export function processContentForTypography(content: string): string {
   // Enhance headings with anchor links for navigation
   processedContent = processedContent.replace(
     /<(h[1-6])([^>]*)>(.*?)<\/h[1-6]>/g,
-    (match, tag, attrs, content) => {
+    (_match, tag, attrs, content) => {
       const id = content
         .toLowerCase()
         .replace(/[^\w\s-]/g, "") // Remove special characters
@@ -52,7 +52,7 @@ export function processContentForTypography(content: string): string {
   // Enhance links with proper attributes
   processedContent = processedContent.replace(
     /<a\s+([^>]*href=["']([^"']*?)["'][^>]*)>(.*?)<\/a>/g,
-    (match, attrs, href, linkText) => {
+    (_match, attrs, href, linkText) => {
       // Check if it's an external link
       const isExternal =
         href.startsWith("http") && !href.includes(window.location.hostname);
@@ -68,7 +68,7 @@ export function processContentForTypography(content: string): string {
   // Enhance images with better attributes
   processedContent = processedContent.replace(
     /<img([^>]+)>/g,
-    (match, attrs) => {
+    (_match, attrs) => {
       // Add loading="lazy" if not already present
       if (!attrs.includes("loading=")) {
         attrs += ' loading="lazy"';
@@ -86,7 +86,7 @@ export function processContentForTypography(content: string): string {
   // Enhance code blocks
   processedContent = processedContent.replace(
     /<pre><code([^>]*)>(.*?)<\/code><\/pre>/gs,
-    (match, attrs, code) => {
+    (_match, attrs, code) => {
       // Extract language from class attribute if present
       const languageMatch = attrs.match(
         /class=["']([^"']*language-([^"'\s]*)[^"']*)["']/
@@ -101,7 +101,7 @@ export function processContentForTypography(content: string): string {
   // Enhance blockquotes
   processedContent = processedContent.replace(
     /<blockquote([^>]*)>(.*?)<\/blockquote>/gs,
-    (match, attrs, content) => {
+    (_match, attrs, content) => {
       return `<blockquote${attrs} role="blockquote">${content}</blockquote>`;
     }
   );
@@ -130,7 +130,7 @@ export function processImageUrls(
   // Replace relative image paths with absolute URLs pointing to backend static files
   return content.replace(
     /(<img[^>]+src=["'])(?!https?:\/\/)([^"']+)(["'][^>]*>)/g,
-    (match, prefix, src, suffix) => {
+    (_match, prefix, src, suffix) => {
       // Handle paths that start with /static/ or are relative
       let processedSrc = src;
 
@@ -252,7 +252,7 @@ export function processFootnoteReferences(content: string): string {
   // Enhance footnote reference links with better aria labels
   return content.replace(
     /<sup class="footnote-ref"><a href="#footnote-(\d+)" id="footnote-ref-(\d+)">(\d+)<\/a><\/sup>/g,
-    (match, footnoteNum, refNum, displayNum) => {
+    (_match, footnoteNum, refNum, displayNum) => {
       return `<sup class="footnote-ref"><a href="#footnote-${footnoteNum}" id="footnote-ref-${refNum}" aria-describedby="footnote-${footnoteNum}" title="Go to footnote ${displayNum}">${displayNum}</a></sup>`;
     }
   );
