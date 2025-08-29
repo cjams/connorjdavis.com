@@ -55,38 +55,47 @@ class ContentFileHandler(FileSystemEventHandler):
         
         # Only handle MDX files
         if event.src_path.endswith('.mdx'):
-            self._schedule_regenerate()
+            self._schedule_regenerate(event.src_path)
     
     def on_created(self, event):
         if event.is_directory:
             return
         
         if event.src_path.endswith('.mdx'):
-            self._schedule_regenerate()
+            self._schedule_regenerate(event.src_path)
     
     def on_deleted(self, event):
         if event.is_directory:
             return
         
         if event.src_path.endswith('.mdx'):
-            self._schedule_regenerate()
+            self._schedule_regenerate(event.src_path)
     
-    def _schedule_regenerate(self):
+    def _schedule_regenerate(self, file_path: str = None):
         """Schedule index regeneration with debouncing"""
         current_time = time.time()
         if current_time - self._last_regenerate > self._regenerate_delay:
             self._last_regenerate = current_time
             # Use a separate thread to avoid blocking the file watcher
-            threading.Thread(target=self._regenerate_index, daemon=True).start()
+            threading.Thread(target=self._regenerate_index, args=(file_path,), daemon=True).start()
     
-    def _regenerate_index(self):
-        """Regenerate the content index"""
+    def _regenerate_index(self, file_path: str = None):
+        """Regenerate the content index and update metadata if needed"""
         try:
-            print("🔄 Detected MDX file changes, regenerating index...")
+            print("🔄 Detected MDX file changes, processing...")
+            
+            # Update metadata for the specific file if it was modified (not deleted)
+            if file_path and Path(file_path).exists():
+                filepath = Path(file_path)
+                if filepath.suffix == '.mdx':
+                    print(f"📄 Updating metadata for {filepath.name}...")
+                    mdx_processor.update_post_metadata(filepath)
+            
+            # Regenerate the index
             index_generator.generate_and_save()
-            print("✅ Content index regenerated successfully")
+            print("✅ Content processing completed successfully")
         except Exception as e:
-            print(f"❌ Error regenerating index: {e}")
+            print(f"❌ Error processing content changes: {e}")
 
 # Global file watcher observer
 observer = None

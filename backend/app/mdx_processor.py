@@ -7,6 +7,8 @@ import re
 import json
 import frontmatter
 import markdown
+import os
+from datetime import datetime
 
 from pathlib import Path
 from typing import Dict, List, Any, Optional
@@ -45,10 +47,12 @@ class MDXProcessor:
                     'use_pygments': True,
                     'css_class': 'highlight',
                     'guess_lang': False,
+                    'style': 'lightbulb',
                 },
                 'pymdownx.highlight': {
                     'use_pygments': True,
                     'css_class': 'highlight',
+                    'pygments_style': 'lightbulb',
                 },
                 'footnotes': {
                     'BACKLINK_TEXT': '↑',  # Use an up arrow instead of the default ↩
@@ -289,6 +293,8 @@ class MDXProcessor:
         # Process markdown
         html_content = self.markdown_processor.convert(processed_content)
         
+        # Debug logging removed - lightbulb theme implementation complete
+        
         # Post-process HTML for better typography
         html_content = self.post_process_html(html_content)
         
@@ -306,6 +312,133 @@ class MDXProcessor:
             'toc': getattr(self.markdown_processor, 'toc', ''),
             'footnotes': footnotes,
         }
+    
+    def calculate_reading_time(self, content: str) -> int:
+        """Calculate reading time in minutes based on content"""
+        # Remove MDX components and markup for more accurate word count
+        clean_content = content
+        
+        # Remove frontmatter if present
+        if content.startswith('---'):
+            parts = content.split('---', 2)
+            if len(parts) >= 3:
+                clean_content = parts[2]
+        
+        # Remove MDX components
+        clean_content = re.sub(r'<[^>]+>', '', clean_content)
+        
+        # Remove code blocks
+        clean_content = re.sub(r'```[\s\S]*?```', '', clean_content)
+        clean_content = re.sub(r'`[^`]+`', '', clean_content)
+        
+        # Remove links markdown
+        clean_content = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', clean_content)
+        
+        # Remove image markdown
+        clean_content = re.sub(r'!\[[^\]]*\]\([^)]+\)', '', clean_content)
+        
+        # Remove markdown headings, bold, italic
+        clean_content = re.sub(r'#+\s*', '', clean_content)
+        clean_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', clean_content)
+        clean_content = re.sub(r'\*([^*]+)\*', r'\1', clean_content)
+        clean_content = re.sub(r'_([^_]+)_', r'\1', clean_content)
+        
+        # Count words
+        words = len(clean_content.split())
+        reading_time = max(1, round(words / 225))
+        
+        return reading_time
+    
+    def generate_excerpt(self, content: str, max_length: int = 150) -> str:
+        """Generate an excerpt from the beginning of the content"""
+        # Remove frontmatter if present
+        clean_content = content
+        if content.startswith('---'):
+            parts = content.split('---', 2)
+            if len(parts) >= 3:
+                clean_content = parts[2].strip()
+        
+        # Remove MDX components
+        clean_content = re.sub(r'<[^>]+>', '', clean_content)
+        
+        # Remove markdown syntax for cleaner excerpt
+        clean_content = re.sub(r'#+\s*', '', clean_content)  # Headers
+        clean_content = re.sub(r'\*\*([^*]+)\*\*', r'\1', clean_content)  # Bold
+        clean_content = re.sub(r'\*([^*]+)\*', r'\1', clean_content)  # Italic
+        clean_content = re.sub(r'_([^_]+)_', r'\1', clean_content)  # Italic
+        clean_content = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', clean_content)  # Links
+        clean_content = re.sub(r'!\[[^\]]*\]\([^)]+\)', '', clean_content)  # Images
+        clean_content = re.sub(r'```[\s\S]*?```', '', clean_content)  # Code blocks
+        clean_content = re.sub(r'`[^`]+`', '', clean_content)  # Inline code
+        
+        # Clean up whitespace
+        clean_content = ' '.join(clean_content.split())
+        
+        # Truncate to max length, breaking at word boundaries
+        if len(clean_content) <= max_length:
+            return clean_content
+        
+        # Find the last space before max_length
+        truncated = clean_content[:max_length]
+        last_space = truncated.rfind(' ')
+        
+        if last_space > 0:
+            truncated = truncated[:last_space]
+        
+        return truncated + '...'
+    
+    def update_post_metadata(self, filepath: Path) -> bool:
+        """Update post metadata with auto-generated values if missing"""
+        try:
+            # Read the file
+            with open(filepath, 'r', encoding='utf-8') as f:
+                post = frontmatter.load(f)
+            
+            metadata_changed = False
+            
+            # Get file modification time
+            mod_time = os.path.getmtime(filepath)
+            mod_datetime = datetime.fromtimestamp(mod_time)
+            
+            # Auto-populate date if not set
+            if not post.metadata.get('date'):
+                post.metadata['date'] = mod_datetime.strftime('%Y-%m-%d')
+                metadata_changed = True
+                print(f"📅 Auto-populated date for {filepath.name}: {post.metadata['date']}")
+            
+            # Recalculate reading time
+            new_reading_time = self.calculate_reading_time(post.content)
+            if post.metadata.get('reading_time') != new_reading_time:
+                post.metadata['reading_time'] = new_reading_time
+                metadata_changed = True
+                print(f"⏱️  Updated reading time for {filepath.name}: {new_reading_time} min")
+            
+            # Always regenerate excerpt to ensure it stays current with content changes
+            new_excerpt = self.generate_excerpt(post.content)
+            if new_excerpt:
+                current_excerpt = post.metadata.get('excerpt', '')
+                if current_excerpt != new_excerpt:
+                    post.metadata['excerpt'] = new_excerpt
+                    metadata_changed = True
+                    if current_excerpt:
+                        print(f"📝 Updated excerpt for {filepath.name}")
+                    else:
+                        print(f"📝 Auto-generated excerpt for {filepath.name}")
+            
+            # Write back if changes were made
+            if metadata_changed:
+                # Convert frontmatter back to string format
+                content_with_frontmatter = frontmatter.dumps(post)
+                with open(filepath, 'w', encoding='utf-8') as f:
+                    f.write(content_with_frontmatter)
+                print(f"✅ Updated metadata for {filepath.name}")
+                return True
+            
+            return False
+            
+        except Exception as e:
+            print(f"❌ Error updating metadata for {filepath}: {e}")
+            return False
     
     def load_mdx_file(self, filepath: Path) -> Optional[Dict[str, Any]]:
         """Load and process an MDX file"""

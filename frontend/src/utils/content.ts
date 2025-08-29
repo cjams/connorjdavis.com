@@ -23,6 +23,20 @@ export function processContentForTypography(content: string): string {
 
   let processedContent = content;
 
+  // Extract and preserve code blocks before processing
+  const codeBlocks: string[] = [];
+  const codeBlockPlaceholder = "___CODE_BLOCK_PLACEHOLDER___";
+  
+  // Match both <pre><code>...</code></pre> and standalone <code> blocks
+  processedContent = processedContent.replace(
+    /<pre[^>]*>[\s\S]*?<\/pre>|<code[^>]*>[\s\S]*?<\/code>/g,
+    (match) => {
+      codeBlocks.push(match);
+      return `${codeBlockPlaceholder}${codeBlocks.length - 1}${codeBlockPlaceholder}`;
+    }
+  );
+
+  // Now safely process typography without affecting code blocks
   // Add proper paragraph spacing - ensure line breaks become proper paragraphs
   processedContent = processedContent
     .replace(/\n\n+/g, "</p><p>") // Convert double line breaks to paragraph breaks
@@ -35,6 +49,12 @@ export function processContentForTypography(content: string): string {
     .replace(/<p><p>/g, "<p>")
     .replace(/<\/p><\/p>/g, "</p>")
     .replace(/<p><\/p>/g, ""); // Remove empty paragraphs
+
+  // Restore code blocks
+  codeBlocks.forEach((codeBlock, index) => {
+    const placeholder = `${codeBlockPlaceholder}${index}${codeBlockPlaceholder}`;
+    processedContent = processedContent.replace(placeholder, codeBlock);
+  });
 
   // Enhance headings with anchor links for navigation
   processedContent = processedContent.replace(

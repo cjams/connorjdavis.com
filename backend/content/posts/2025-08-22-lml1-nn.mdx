@@ -1,34 +1,101 @@
 ---
 author: Connor Davis
 categories:
-  - technical
-date: "2025-08-22T11:53:42"
-excerpt:
-reading_time: X
+- technical
+date: '2025-08-22T11:53:42'
+excerpt: Are you curious about how ChatGPT works? Maybe you've heard of things like
+  AI "training" and "inference" but don't know what they mean exactly. This...
+reading_time: 3
 slug: lml-1
-status: draft 
-tags: [neural-networks, backpropogation, lml]
-title: Learning Machine Learning - Neural Networks
+status: draft
+tags:
+- neural-networks
+- backpropogation
+- lml
+title: What is a Neural Network?
 ---
 
-Welcome to the _Learning Machine Learning_ (LML) series! I've recently embarked on a journey
-to learn machine learning. I'm working through Andrej Karpathy's [Zero to Hero](https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)
+Are you curious about how ChatGPT works? Maybe you've heard of things like
+AI "training" and "inference" but don't know what they mean exactly. This blog post is the first
+in a series called _Learning Machine Learning_ (LML) that will answer these questions.
+
+I've been asking many of the above questions lately, so I've set out to learn.
+To start, I'm currently working through Andrej Karpathy's [Zero to Hero](https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)
 lectures on YouTube, as well as the [Deep Learning](https://www.coursera.org/specializations/deep-learning/paidmedia?utm_medium=sem&utm_source=gg&utm_campaign=b2c_namer_deep-learning_deeplearning-ai_ftcof_specializations_px_dr_bau_gg_sem_pr-bd_us-ca_en_m_hyb_17-08_x&campaignid=904733485&adgroupid=46370300620&device=c&keyword=deeplearning%20ai%20coursera&matchtype=b&network=g&devicemodel=&creativeid=415429098219&assetgroupid=&targetid=kwd-659621418624&extensionid=&placement=&gad_source=1&gad_campaignid=904733485&gclid=Cj0KCQjwqqDFBhDhARIsAIHTlkvbwRNyldzz6eN7Gfy7W19CTacXCq_rvpKdtqXwR5jOU33NkJkZtdoaAqqfEALw_wcB)
-course on Coursera by Andrew Ng. Rather than just read books or listen to lectures on the subject, I'm emphasizing
-learning by building, hacking, and teaching. Learning by building is a great way to apply
-what you've learned on a project of your own. I have several personal projects in mind that
-I want to build along the way. Learning by hacking is another great way to learn something,
-because in order to hack something in the [original sense of the word](http://www.catb.org/jargon/html/H/hacker.html),
-you have to _really_ understand it. For some inspiration and ideas I'll be reading through the [embracethered](https://embracethered.com/blog/)
-blog for security-related hacks of ML systems. Learning by teaching is the final way
-I will be solidifying what I learn. I plan to post on this blog and create YouTube
-content.
+course on Coursera by Andrew Ng. I'm also reading through the [embracethered](https://embracethered.com/blog/)
+blog to develop my [hacker mindset](/posts/hacker) on the topic.
 
-In today's post we'll be diving into the _neural network_ architecture. We'll see
-what a neural network is, how to build one, and how to train one.
+Rather than just read books or listen to lectures on the subject, I'm emphasizing
+learning by building, hacking, and teaching. I've found these three techniques to be the
+best way to understand something at a deep level. I have several projects in mind to 
+build along the way and will share those as well. 
 
-# Neural Networks
+In today's post we'll be diving into the _neural network_. We'll see
+what a neural network is and why it has become so popular. Then we will build a
+neural network from first principles. Next we will train the network using
+backpropogation. Finally we will run inference on the network to demonstrate
+the full end-to-end training and inference cycle.
+
+# Neural Network
 
 Machine Learning is a broad discipline that encompasses many different "learning" algorithms.
 Neural networks are one example. There are many others, like support-vector machines,
-logistic regression, and k-nearest neighbors.
+logistic regression, random forests, and k-nearest neighbors. 
+
+This series is focused on neural networks because they have become the dominant
+learning architecture in use today. The reason is that neural networks scale better
+than any other alternative. They scale with respect to 1/ the size of the network
+(we will see what "size" means in this context soon) and 2/ the amount of data that is available
+for training.
+
+This means that the more data you have and the more compute resources you have,
+the better these models perform. This is in part why [AI-related data center spending](https://fortune.com/2025/08/06/data-center-artificial-intelligence-bubble-consumer-spending-economy/)
+is forecasted to be more than $364 billion in 2025 alone.
+
+### What is it?
+
+Fundamentally, a neural network is software that makes predictions. You input some data that you have,
+and the network spits out a prediction about something you are interested in. For example, let's say
+you are shopping around for a new house. You would like to know with some confidence
+what the sales price of a home will be given its square footage and zipcode. You could hire a realtor
+to do this, but you are industrious and allergic to paying commissions. Instead you
+can build a neural network to help you. The inputs (also called "features") would be square footage and zipcode
+and the predicted output is price.
+
+How would you go about doing this? The first step is to _train_ the network. Training requires large data
+sets containing entries of the form (square footage, zipcode, price).
+Once the network is trained, then you can do _inference_ with it. Inference in this case means
+you give it new (square footage, zipcode) pairs, and it predicts a price.
+
+I used the contrived house example to help build up some intuition, but now I want to get into more of the
+technical details of the structure of the these networks and describe exactly what is meant by training and inference.
+
+### Technical Deep Dive
+
+Mathematically, neural networks are functions with many input and output variables[^1]. In general, they are capable
+of approximating any real-valued continuous function. This approximating property is critically important for
+their practical utility in solving problems we have today. Many of the processes in nature and human life
+are extremely complex, involving many thousands of variables. As such it is not possible for a human to write down a
+formula for these processes. Imagine trying to come up with a formula that given any English phrase, produces
+the most likely word to appear next. It's an impossible task for any human to do. The crazy thing is though, such a
+formula does exist in the space of all mathematical functions. And neural networks and the training process in particualr give us a way to
+search through this vast space to find it. 
+
+#### Expression Graphs
+
+In practice, neural networks are massive, complex functions that are difficult to visualize. However
+we can grasp the basics with much simpler functions. The principles used here apply equally to all 
+of them.
+
+The following function will be our running example:
+
+```python
+f = x*2 + y*2
+```
+
+
+
+
+
+---
+[^1] Also known as [vector valued functions](https://en.wikipedia.org/wiki/Vector-valued_function)

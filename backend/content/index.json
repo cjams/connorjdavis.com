@@ -3,25 +3,25 @@
     {
       "filename": "2025-08-23-hacker.mdx",
       "slug": "hacker",
-      "title": "hacker (n)",
+      "title": "hacker (n.)",
       "date": "2025-08-23T08:47:42",
       "author": "Connor Davis",
-      "excerpt": null,
-      "reading_time": "X",
+      "excerpt": "What do you think of when you hear the word \"hacker\"? Probably a person in a black room in a black hoodie staring at a screen that looks like the...",
+      "reading_time": 4,
       "tags": [
         "hacking",
         "complex-systems"
       ],
-      "status": "publish"
+      "status": "draft"
     },
     {
       "filename": "2025-08-22-lml1-nn.mdx",
       "slug": "lml-1",
-      "title": "Learning Machine Learning - Neural Networks",
+      "title": "What is a Neural Network?",
       "date": "2025-08-22T11:53:42",
       "author": "Connor Davis",
-      "excerpt": null,
-      "reading_time": "X",
+      "excerpt": "Are you curious about how ChatGPT works? Maybe you've heard of things like AI \"training\" and \"inference\" but don't know what they mean exactly. This...",
+      "reading_time": 3,
       "tags": [
         "neural-networks",
         "backpropogation",
@@ -193,18 +193,18 @@
       "status": "publish"
     },
     {
-      "filename": "2024-08-02-about.mdx",
-      "slug": "about",
-      "title": "About",
-      "date": "2024-08-02T20:43:28",
-      "author": "Connor Davis",
-      "status": "publish"
-    },
-    {
       "filename": "2024-09-29-privacy-policy.mdx",
       "slug": "privacy-policy",
       "title": "Privacy Policy",
       "date": "2024-09-29T14:28:01",
+      "author": "Connor Davis",
+      "status": "publish"
+    },
+    {
+      "filename": "2024-08-02-about.mdx",
+      "slug": "about",
+      "title": "About",
+      "date": "2024-08-02T20:43:28",
       "author": "Connor Davis",
       "status": "publish"
     }
@@ -229,5 +229,5 @@
     "neural-networks",
     "react-native"
   ],
-  "generated_at": "2025-08-24T00:48:55.695529"
+  "generated_at": "2025-08-29T08:04:27.237742"
 }
