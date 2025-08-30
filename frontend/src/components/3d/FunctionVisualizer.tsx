@@ -114,7 +114,7 @@ export const FunctionVisualizer: React.FC<FunctionVisualizerProps> = ({
         className="bg-gray-50 dark:bg-gray-900 rounded-lg flex items-center justify-center"
         style={{ height }}
       >
-        <div className="text-gray-500 dark:text-gray-400">
+        <div className="text-foreground-500">
           Loading function visualization...
         </div>
       </div>
@@ -122,19 +122,7 @@ export const FunctionVisualizer: React.FC<FunctionVisualizerProps> = ({
   }
 
   return (
-    <div className="space-y-4">
-      {/* Function info header */}
-      <div className="flex flex-wrap gap-2 items-center text-sm text-gray-600 dark:text-gray-400">
-        <div>
-          Function: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded font-mono">
-            f(x,y) = {functionExpression}
-          </code>
-        </div>
-        <div>
-          Domain: x ∈ [{domain.x[0]}, {domain.x[1]}], y ∈ [{domain.y[0]}, {domain.y[1]}]
-        </div>
-      </div>
-
+    <div className="space-y-2">
       {/* 3D Visualization */}
       <ThreeCanvas
         height={height}
@@ -156,20 +144,31 @@ export const FunctionVisualizer: React.FC<FunctionVisualizerProps> = ({
         />
       </ThreeCanvas>
 
+      <div className="flex flex-wrap gap-2 mt-4 items-center justify-center mx-auto text-sm text-foreground-600">
+        <div>
+          Function: <code className="bg-background-200 px-2 py-1 rounded font-mono">
+            f(x,y) = {functionExpression}
+          </code>
+        </div>
+        <div className="text-foreground-600">
+          Domain: x ∈ [{domain.x[0]}, {domain.x[1]}], y ∈ [{domain.y[0]}, {domain.y[1]}]
+        </div>
+      </div>
+
       {/* Color Legend */}
       <div className="flex justify-center">
         <ColorLegend
           colorScheme={colorScheme}
           min={bounds.min}
           max={bounds.max}
-          className="mt-2"
+          className="mt-1"
         />
       </div>
 
       {/* Controls info */}
       {enableControls && (
-        <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-          🖱️ Click and drag to rotate • Scroll to zoom • Right-click and drag to pan
+        <div className="text-sm text-foreground-600 text-center">
+          Click and drag to rotate • Scroll to zoom • Right-click and drag to pan
         </div>
       )}
     </div>

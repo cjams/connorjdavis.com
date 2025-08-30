@@ -5,7 +5,7 @@ categories:
 date: '2025-08-22T11:53:42'
 excerpt: Are you curious about how ChatGPT works? Maybe you've heard of things like
   AI "training" and "inference" but don't know what they mean exactly. This...
-reading_time: 3
+reading_time: 4
 slug: lml-1
 status: draft
 tags:
@@ -88,15 +88,15 @@ of them.
 The following function will be our running example:
 
 ```python
-f = x*2 + y*2
+f = x^2 + y^2
 ```
 
 This is a function of two variables, x and y. We can visualize the function in three dimensions:
 
 <FunctionVisualizer 
-  function="(x-5)^2 + (y-5)^2" 
-  domain={{"x": [0, 10], "y": [0, 10]}} 
-  zRange={[0, 10]}
+  function="x * exp(-(x^2 + y^2))" 
+  domain={{"x": [-1.75, 1.75], "y": [-1.75, 1.75]}} 
+  zRange={[-2, 2]}
   resolution={50}
   colorScheme="viridis"
   height="500px"
@@ -105,10 +105,30 @@ This is a function of two variables, x and y. We can visualize the function in t
   enableControls={true}
 />
 
+In addition to graphing the values of the function as we did above, we can also create 
+a graph that represents the data flow through the function and its operands. This
+is called an _expression graph_ or _computational graph_. Below is the expression graph for ```f(2, 3)```:
+
+![expression graph](/static/media/expression-graph.svg)
+
+Notice the ```x``` and ```y``` ```data``` values at the top are initialized with ```2``` and ```3``` respectively.
+You can trace these input values as they flow downward through the function's intermediate expressions
+(denoted by they symbol ```**2```, i.e. the square of the inputs) until the final expression ```+```, giving a final
+value of ```f(2, 3) == 13```. This flow of inputs through each expression to the final output is called the 
+_**forward pass**_. So a forward pass is just another name for the evaluation of the function given some inputs. The process
+of doing multiple forward passes with different inputs is called _**inference**_.
+
+Now you are probably wondering what the ```grad``` values are for? The ```grad``` stands for the _**gradient**_.
+The gradient is a concept from calculus which captures the influence that a particular variable has on the 
+final value of the function. The gradient at each node is calculated via the [Chain Rule](https://en.wikipedia.org/wiki/Chain_rule). 
+However instead of starting from the top (inputs), you start from the bottom (output).
+to ```f``` is 1.
 
 
 
 
 
----
-[^1] Also known as [vector valued functions](https://en.wikipedia.org/wiki/Vector-valued_function)
+
+
+
+[^1]: Also known as [vector valued functions](https://en.wikipedia.org/wiki/Vector-valued_function)

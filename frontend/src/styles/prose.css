@@ -164,8 +164,8 @@ td.linenos .normal { color: #3c4354; background-color: transparent; padding-left
 span.linenos { color: #3c4354; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 td.linenos .special { color: #3c4354; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 span.linenos.special { color: #3c4354; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.highlight .hll { background-color: #6e7681 }
-.highlight { background: #1d2331; color: #d4d2c8 }
+.highlight .hll { background-color: #2a2e32 }
+.highlight { background: #17191c; color: #d4d2c8 }
 .highlight .c { color: #7e8aa1 } /* Comment */
 .highlight .err { color: #f88f7f } /* Error */
 .highlight .esc { color: #d4d2c8 } /* Escape */

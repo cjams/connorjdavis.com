@@ -78,7 +78,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
   };
 
   return (
-    <div style={{ width: '100%', height }} className="bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden">
+    <div style={{ width: '100%', height }} className="bg-[#17191c] rounded-lg overflow-hidden">
       <Canvas
         camera={{
           position: defaultCamera.position,
@@ -112,10 +112,10 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
           rotation={[-Math.PI / 2, 0, 0]}
           cellSize={1}
           cellThickness={1}
-          cellColor="#2D313B"
+          cellColor="#32353d"
           sectionSize={20}
           sectionThickness={1}
-          sectionColor="#2D313B"
+          sectionColor="#32353d"
           fadeDistance={50}
           fadeStrength={0.5}
           followCamera={false}

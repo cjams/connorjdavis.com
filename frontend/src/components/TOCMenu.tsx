@@ -103,7 +103,7 @@ const TOCMenu: React.FC<TOCMenuProps> = ({ toc, className = "" }) => {
       {/* Desktop TOC Sidebar */}
       <div className="hidden md:block sticky top-24 h-fit max-h-[calc(100vh-8rem)] overflow-y-auto">
         <div className="w-64 p-4 bg-muted/30 rounded-lg border border-border">
-          <h3 className="text-sm font-semibold text-foreground mb-3">
+          <h3 className="text-sm font-semibold text-foreground mb-1">
             Table of Contents
           </h3>
           <div

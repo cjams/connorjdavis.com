@@ -182,13 +182,10 @@ export const ColorLegend: React.FC<{
   const legend = generateColorLegend(colorScheme, 50);
   
   return (
-    <div className={`flex flex-col items-center space-y-2 ${className}`}>
-      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        {getColorSchemeName(colorScheme)}
-      </div>
+    <div className={`flex flex-col items-center space-y-1 ${className}`}>
       <div className="flex items-center space-x-2">
-        <span className="text-xs text-gray-500 dark:text-gray-400">
-          {min.toFixed(2)}
+        <span className="text-sm text-foreground-600">
+          Range: {min.toFixed(2)}
         </span>
         <div className="w-32 h-4 rounded-full overflow-hidden flex">
           {legend.map((item, index) => (
@@ -199,7 +196,7 @@ export const ColorLegend: React.FC<{
             />
           ))}
         </div>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-sm text-foreground-600">
           {max.toFixed(2)}
         </span>
       </div>
