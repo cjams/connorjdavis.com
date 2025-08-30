@@ -146,28 +146,31 @@ async def startup_event():
     except Exception as e:
         print(f"Warning: Could not generate initial index: {e}")
     
-    # Start file watcher
-    try:
-        observer = Observer()
-        event_handler = ContentFileHandler()
-        
-        # Watch both posts and pages directories
-        posts_dir = content_dir / "posts"
-        pages_dir = content_dir / "pages"
-        
-        if posts_dir.exists():
-            observer.schedule(event_handler, str(posts_dir), recursive=False)
-            print(f"📁 Watching {posts_dir} for MDX changes...")
-        
-        if pages_dir.exists():
-            observer.schedule(event_handler, str(pages_dir), recursive=False)
-            print(f"📁 Watching {pages_dir} for MDX changes...")
-        
-        observer.start()
-        print("👀 File watcher started successfully")
-        
-    except Exception as e:
-        print(f"Warning: Could not start file watcher: {e}")
+    # Only start file watcher in debug/development mode
+    if DEBUG_MODE:
+        try:
+            observer = Observer()
+            event_handler = ContentFileHandler()
+            
+            # Watch both posts and pages directories
+            posts_dir = content_dir / "posts"
+            pages_dir = content_dir / "pages"
+            
+            if posts_dir.exists():
+                observer.schedule(event_handler, str(posts_dir), recursive=False)
+                print(f"📁 Watching {posts_dir} for MDX changes...")
+            
+            if pages_dir.exists():
+                observer.schedule(event_handler, str(pages_dir), recursive=False)
+                print(f"📁 Watching {pages_dir} for MDX changes...")
+            
+            observer.start()
+            print("👀 File watcher started successfully")
+            
+        except Exception as e:
+            print(f"Warning: Could not start file watcher: {e}")
+    else:
+        print("📴 File watching disabled in production mode")
 
 @app.on_event("shutdown")
 async def shutdown_event():
