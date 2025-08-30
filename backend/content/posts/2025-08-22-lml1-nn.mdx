@@ -78,13 +78,11 @@ their practical utility in solving problems we have today. Many of the processes
 are extremely complex, involving many thousands of variables. As such it is not possible for a human to write down a
 formula for these processes. Imagine trying to come up with a formula that given any English phrase, produces
 the most likely word to appear next. It's an impossible task for any human to do. The crazy thing is though, such a
-formula does exist in the space of all mathematical functions. And neural networks and the training process in particualr give us a way to
+formula does exist in the space of all mathematical functions. And neural networks and the training process in particular give us a way to
 search through this vast space to find it. 
 
-#### Expression Graphs
-
 In practice, neural networks are massive, complex functions that are difficult to visualize. However
-we can grasp the basics with much simpler functions. The principles used here apply equally to all 
+we can grasp the fundamentals with much simpler functions. The principles used here apply equally to all 
 of them.
 
 The following function will be our running example:
@@ -92,6 +90,21 @@ The following function will be our running example:
 ```python
 f = x*2 + y*2
 ```
+
+This is a function of two variables, x and y. We can visualize the function in three dimensions:
+
+<FunctionVisualizer 
+  function="(x-5)^2 + (y-5)^2" 
+  domain={{"x": [0, 10], "y": [0, 10]}} 
+  zRange={[0, 10]}
+  resolution={50}
+  colorScheme="viridis"
+  height="500px"
+  showWireframe={true}
+  cameraPosition={[8, -3, 4]}
+  enableControls={true}
+/>
+
 
 
 

@@ -12,12 +12,13 @@ export const FunctionMesh: React.FC<FunctionMeshProps> = ({
   domain,
   resolution,
   colorScheme,
-  showWireframe = false
+  showWireframe = false,
+  zRange
 }) => {
   // Generate mesh data - memoized for performance
   const meshData = useMemo(() => {
-    return generateFunctionMesh(mathFunction, domain, resolution);
-  }, [mathFunction, domain, resolution]);
+    return generateFunctionMesh(mathFunction, domain, resolution, zRange);
+  }, [mathFunction, domain, resolution, zRange]);
 
   // Generate colors using the color gradient utility
   const colors = useMemo(() => {
@@ -51,7 +52,7 @@ export const FunctionMesh: React.FC<FunctionMeshProps> = ({
     
     // Set attributes
     geo.setAttribute('position', new BufferAttribute(meshData.vertices, 3));
-    geo.setAttribute('color', new BufferAttribute(colors, 3));
+    geo.setAttribute('color', new BufferAttribute(colors, 3)); // 3 components for RGB
     geo.setAttribute('normal', new BufferAttribute(normals, 3));
     geo.setIndex(new BufferAttribute(meshData.indices, 1));
     

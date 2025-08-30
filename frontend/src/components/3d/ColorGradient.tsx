@@ -55,6 +55,11 @@ function interpolateColor(
 export function getColorForValue(value: number, colorScheme: ColorScheme): [number, number, number] {
   const colors = COLOR_SCHEMES[colorScheme];
   
+  // Handle NaN, undefined, or invalid values
+  if (!isFinite(value)) {
+    return [0, 0, 0]; // Return black for invalid values
+  }
+  
   // Clamp value to [0, 1]
   const normalizedValue = Math.max(0, Math.min(1, value));
   
@@ -71,33 +76,54 @@ export function getColorForValue(value: number, colorScheme: ColorScheme): [numb
   const lowerIndex = Math.floor(scaledValue);
   const upperIndex = Math.ceil(scaledValue);
   
-  if (lowerIndex === upperIndex) {
-    return colors[lowerIndex];
+  // Ensure indices are within bounds
+  const safeLowerIndex = Math.max(0, Math.min(colors.length - 1, lowerIndex));
+  const safeUpperIndex = Math.max(0, Math.min(colors.length - 1, upperIndex));
+  
+  if (safeLowerIndex === safeUpperIndex) {
+    return colors[safeLowerIndex];
   }
   
   const t = scaledValue - lowerIndex;
-  return interpolateColor(colors[lowerIndex], colors[upperIndex], t);
+  return interpolateColor(colors[safeLowerIndex], colors[safeUpperIndex], t);
 }
 
 /**
  * Create color array for function mesh based on z-values
  */
 export function createColorGradient({ values, colorScheme, min, max }: ColorGradientProps): Float32Array {
-  // Calculate min and max if not provided
-  const minValue = min !== undefined ? min : Math.min(...values);
-  const maxValue = max !== undefined ? max : Math.max(...values);
+  // Filter out NaN values for min/max calculation
+  const finiteValues = values.filter(v => isFinite(v));
+  
+  // If no finite values, return default colors
+  if (finiteValues.length === 0) {
+    const colors: number[] = [];
+    for (let i = 0; i < values.length; i++) {
+      colors.push(0, 0, 0); // Black for NaN values
+    }
+    return new Float32Array(colors);
+  }
+  
+  // Calculate min and max from finite values only
+  const minValue = min !== undefined ? min : Math.min(...finiteValues);
+  const maxValue = max !== undefined ? max : Math.max(...finiteValues);
   const range = maxValue - minValue;
   
   const colors: number[] = [];
   
   for (const value of values) {
-    // Normalize value to [0, 1]
-    const normalizedValue = range > 0 ? (value - minValue) / range : 0;
-    
-    // Get color for this value
-    const [r, g, b] = getColorForValue(normalizedValue, colorScheme);
-    
-    colors.push(r, g, b);
+    if (!isFinite(value)) {
+      // Use black color for NaN/infinite values
+      colors.push(0, 0, 0);
+    } else {
+      // Normalize value to [0, 1]
+      const normalizedValue = range > 0 ? (value - minValue) / range : 0;
+      
+      // Get color for this value
+      const [r, g, b] = getColorForValue(normalizedValue, colorScheme);
+      
+      colors.push(r, g, b);
+    }
   }
   
   return new Float32Array(colors);

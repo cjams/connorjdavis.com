@@ -11,6 +11,7 @@ export interface FunctionVisualizerProps {
   height?: string;                    // Component height (default: "400px")
   cameraPosition?: [number, number, number];
   enableControls?: boolean;           // Enable orbit controls (default: true)
+  zRange?: [number, number];          // Optional Z-value clamping [min, max]
 }
 
 export interface Point3D {
@@ -24,6 +25,14 @@ export interface FunctionMesh {
   colors: Float32Array;
   indices: Uint32Array;
   bounds: {
+    min: Point3D;
+    max: Point3D;
+  };
+  actualBounds: {    // Unclamped bounds
+    min: Point3D;
+    max: Point3D;
+  };
+  clampedBounds: {   // Bounds after Z-clamping
     min: Point3D;
     max: Point3D;
   };
@@ -52,6 +61,7 @@ export interface PointTracker {
 export interface Domain {
   x: [number, number];
   y: [number, number];
+  z?: [number, number];  // Optional Z-domain for clamping
 }
 
 // Color scheme definitions
@@ -95,6 +105,7 @@ export interface FunctionMeshProps {
   resolution: number;
   colorScheme: ColorScheme;
   showWireframe?: boolean;
+  zRange?: [number, number];          // Optional Z-value clamping [min, max]
 }
 
 // Validation and error types

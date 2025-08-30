@@ -1,40 +1,67 @@
 import type { MathFunction, FunctionMesh, Domain, Point3D } from '../types/3d';
 
 /**
+ * Clamp Z-values to specified range
+ */
+export function clampZValue(z: number, zRange: [number, number]): number {
+  return Math.max(zRange[0], Math.min(zRange[1], z));
+}
+
+/**
  * Generate a 3D mesh from a mathematical function f(x,y) = z
  */
 export function generateFunctionMesh(
   mathFunction: MathFunction,
   domain: Domain,
-  resolution: number
+  resolution: number,
+  zRange?: [number, number]
 ): FunctionMesh {
   const vertices: number[] = [];
   const colors: number[] = [];
   const indices: number[] = [];
   
-  let minZ = Infinity;
-  let maxZ = -Infinity;
+  let actualMinZ = Infinity;
+  let actualMaxZ = -Infinity;
+  let clampedMinZ = Infinity;
+  let clampedMaxZ = -Infinity;
   
-  // Generate vertices and collect z-values for color mapping
-  const zValues: number[] = [];
-  
+  // Generate all vertices with proper z-clamping
   for (let i = 0; i <= resolution; i++) {
     for (let j = 0; j <= resolution; j++) {
       const x = domain.x[0] + (i / resolution) * (domain.x[1] - domain.x[0]);
       const y = domain.y[0] + (j / resolution) * (domain.y[1] - domain.y[0]);
-      const z = mathFunction.evaluate(x, y);
+      const originalZ = mathFunction.evaluate(x, y);
       
-      vertices.push(x, y, z);
-      zValues.push(z);
+      // Skip completely invalid points (NaN, Infinity)
+      if (!isFinite(originalZ)) {
+        // Use a reasonable fallback for non-finite values
+        vertices.push(x, y, 0);
+        continue;
+      }
       
-      minZ = Math.min(minZ, z);
-      maxZ = Math.max(maxZ, z);
+      // Track actual bounds (before clamping)
+      actualMinZ = Math.min(actualMinZ, originalZ);
+      actualMaxZ = Math.max(actualMaxZ, originalZ);
+      
+      // Apply z-range clamping if specified
+      let finalZ = originalZ;
+      if (zRange) {
+        finalZ = Math.max(zRange[0], Math.min(zRange[1], originalZ));
+      }
+      
+      // Track clamped bounds
+      clampedMinZ = Math.min(clampedMinZ, finalZ);
+      clampedMaxZ = Math.max(clampedMaxZ, finalZ);
+      
+      vertices.push(x, y, finalZ);
     }
   }
   
-  // Generate colors based on z-values (will be replaced by color gradient utility)
-  for (const z of zValues) {
-    const normalizedZ = maxZ > minZ ? (z - minZ) / (maxZ - minZ) : 0;
+  // Generate colors for all vertices (back to RGB without alpha)
+  const numVertices = vertices.length / 3;
+  for (let k = 0; k < numVertices; k++) {
+    const z = vertices[k * 3 + 2];
+    const normalizedZ = clampedMaxZ > clampedMinZ ? (z - clampedMinZ) / (clampedMaxZ - clampedMinZ) : 0;
     
     // Simple color gradient from blue (low) to red (high)
     const r = normalizedZ;
@@ -44,7 +71,7 @@ export function generateFunctionMesh(
     colors.push(r, g, b);
   }
   
-  // Generate triangle indices
+  // Generate triangle indices - exclude triangles that are on flat planes at z-limits
   for (let i = 0; i < resolution; i++) {
     for (let j = 0; j < resolution; j++) {
       const topLeft = i * (resolution + 1) + j;
@@ -52,11 +79,35 @@ export function generateFunctionMesh(
       const bottomLeft = (i + 1) * (resolution + 1) + j;
       const bottomRight = bottomLeft + 1;
       
-      // First triangle
-      indices.push(topLeft, bottomLeft, topRight);
+      // Check that all vertices have finite z-values
+      const topLeftZ = vertices[topLeft * 3 + 2];
+      const topRightZ = vertices[topRight * 3 + 2];
+      const bottomLeftZ = vertices[bottomLeft * 3 + 2];
+      const bottomRightZ = vertices[bottomRight * 3 + 2];
       
-      // Second triangle  
-      indices.push(topRight, bottomLeft, bottomRight);
+      if (isFinite(topLeftZ) && isFinite(topRightZ) && isFinite(bottomLeftZ) && isFinite(bottomRightZ)) {
+        // Skip triangles where all vertices are at the z-limit (creating flat planes)
+        if (zRange && clampedMaxZ > clampedMinZ) {
+          const tolerance = 0.001;
+          const isAtLimit = (z: number) => Math.abs(z - zRange[1]) < tolerance || Math.abs(z - zRange[0]) < tolerance;
+          
+          const allAtUpperLimit = isAtLimit(topLeftZ) && isAtLimit(topRightZ) && 
+                                 isAtLimit(bottomLeftZ) && isAtLimit(bottomRightZ) &&
+                                 Math.abs(topLeftZ - zRange[1]) < tolerance;
+          
+          if (!allAtUpperLimit) {
+            // First triangle
+            indices.push(topLeft, bottomLeft, topRight);
+            
+            // Second triangle  
+            indices.push(topRight, bottomLeft, bottomRight);
+          }
+        } else {
+          // No z-range filtering, include all valid triangles
+          indices.push(topLeft, bottomLeft, topRight);
+          indices.push(topRight, bottomLeft, bottomRight);
+        }
+      }
     }
   }
   
@@ -68,12 +119,36 @@ export function generateFunctionMesh(
       min: {
         x: domain.x[0],
         y: domain.y[0],
-        z: minZ
+        z: isFinite(clampedMinZ) ? clampedMinZ : 0
       },
       max: {
         x: domain.x[1],
         y: domain.y[1],
-        z: maxZ
+        z: isFinite(clampedMaxZ) ? clampedMaxZ : 0
+      }
+    },
+    actualBounds: {
+      min: {
+        x: domain.x[0],
+        y: domain.y[0],
+        z: isFinite(actualMinZ) ? actualMinZ : 0
+      },
+      max: {
+        x: domain.x[1],
+        y: domain.y[1],
+        z: isFinite(actualMaxZ) ? actualMaxZ : 0
+      }
+    },
+    clampedBounds: {
+      min: {
+        x: domain.x[0],
+        y: domain.y[0],
+        z: isFinite(clampedMinZ) ? clampedMinZ : 0
+      },
+      max: {
+        x: domain.x[1],
+        y: domain.y[1],
+        z: isFinite(clampedMaxZ) ? clampedMaxZ : 0
       }
     }
   };

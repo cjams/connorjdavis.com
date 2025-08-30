@@ -70,7 +70,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
   children
 }) => {
   const defaultCamera = {
-    position: camera?.position || [6, 6, 20] as [number, number, number],
+    position: camera?.position || [0, 0, 0] as [number, number, number],
     target: camera?.target || [0, 0, 0] as [number, number, number],
     enableZoom: camera?.enableZoom ?? true,
     enablePan: camera?.enablePan ?? true,
@@ -84,7 +84,8 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
           position: defaultCamera.position,
           fov: 50,
           near: 0.1,
-          far: 1000
+          far: 1000,
+          up: [0, 0, 1]
         }}
         gl={{
           antialias: true,
@@ -110,15 +111,16 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
           position={[0, 0, 0]}
           rotation={[-Math.PI / 2, 0, 0]}
           cellSize={1}
-          cellThickness={0.5}
-          cellColor="#6b7280"
-          sectionSize={5}
+          cellThickness={1}
+          cellColor="#2D313B"
+          sectionSize={20}
           sectionThickness={1}
-          sectionColor="#4b5563"
-          fadeDistance={30}
-          fadeStrength={1}
+          sectionColor="#2D313B"
+          fadeDistance={50}
+          fadeStrength={0.5}
           followCamera={false}
           infiniteGrid={false}
+          side="double"
         />
         
         {/* Axes helper to show X, Y, Z directions clearly */}
@@ -137,7 +139,8 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({
           dampingFactor={0.05}
           minDistance={1}
           maxDistance={50}
-          maxPolarAngle={Math.PI}
+          minPolarAngle={0.1}
+          maxPolarAngle={Math.PI / 2 - 0.1}
         />
 
         {/* Children (mesh components) */}

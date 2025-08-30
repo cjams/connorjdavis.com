@@ -67,30 +67,87 @@ class MDXProcessor:
             return {}
         
         props = {}
-        # Handle quoted props like prop="value"
-        quoted_pattern = re.compile(r'(\w+)=(?:"([^"]*)"|\{([^}]*)\}|([^\s]+))')
-        matches = quoted_pattern.findall(props_string)
         
-        for match in matches:
-            prop_name = match[0]
-            # Check which group matched (quoted string, JS expression, or unquoted)
-            prop_value = match[1] or match[2] or match[3]
+        # Manually parse props to handle nested braces correctly
+        i = 0
+        while i < len(props_string):
+            # Skip whitespace
+            while i < len(props_string) and props_string[i].isspace():
+                i += 1
             
-            # Try to parse as JSON if it looks like a JS expression
-            if prop_value.startswith('{') and prop_value.endswith('}'):
+            if i >= len(props_string):
+                break
+                
+            # Extract prop name
+            prop_name_start = i
+            while i < len(props_string) and props_string[i] not in '=\t\n\r ':
+                i += 1
+            
+            if i >= len(props_string) or props_string[i] != '=':
+                break
+                
+            prop_name = props_string[prop_name_start:i]
+            i += 1  # Skip '='
+            
+            # Skip whitespace after =
+            while i < len(props_string) and props_string[i].isspace():
+                i += 1
+            
+            if i >= len(props_string):
+                break
+            
+            # Parse prop value
+            if props_string[i] == '"':
+                # Handle quoted string
+                i += 1  # Skip opening quote
+                value_start = i
+                while i < len(props_string) and props_string[i] != '"':
+                    i += 1
+                prop_value = props_string[value_start:i]
+                if i < len(props_string):
+                    i += 1  # Skip closing quote
+            elif props_string[i] == '{':
+                # Handle JSX expression with nested braces
+                brace_count = 0
+                value_start = i
+                while i < len(props_string):
+                    if props_string[i] == '{':
+                        brace_count += 1
+                    elif props_string[i] == '}':
+                        brace_count -= 1
+                        if brace_count == 0:
+                            i += 1  # Include the closing brace
+                            break
+                    i += 1
+                
+                prop_value = props_string[value_start:i]
+                # Remove outer braces for parsing
+                inner_value = prop_value[1:-1]
+                
+                # Try to parse as JSON
                 try:
-                    prop_value = json.loads(prop_value)
+                    prop_value = json.loads(inner_value)
                 except json.JSONDecodeError:
-                    pass
-            elif prop_value.startswith('[') and prop_value.endswith(']'):
-                try:
-                    prop_value = json.loads(prop_value)
-                except json.JSONDecodeError:
-                    pass
-            elif prop_value.lower() in ('true', 'false'):
-                prop_value = prop_value.lower() == 'true'
-            elif prop_value.isdigit():
-                prop_value = int(prop_value)
+                    # If JSON parsing fails, try some basic conversions
+                    inner_value = inner_value.strip()
+                    if inner_value.lower() in ('true', 'false'):
+                        prop_value = inner_value.lower() == 'true'
+                    elif inner_value.isdigit():
+                        prop_value = int(inner_value)
+                    else:
+                        prop_value = inner_value
+            else:
+                # Handle unquoted value
+                value_start = i
+                while i < len(props_string) and not props_string[i].isspace():
+                    i += 1
+                prop_value = props_string[value_start:i]
+                
+                # Try basic conversions
+                if prop_value.lower() in ('true', 'false'):
+                    prop_value = prop_value.lower() == 'true'
+                elif prop_value.isdigit():
+                    prop_value = int(prop_value)
             
             props[prop_name] = prop_value
         

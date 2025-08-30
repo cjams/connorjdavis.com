@@ -18,8 +18,8 @@ interface ComponentMatch {
 function extractPropsFromTag(tagContent: string): Record<string, any> {
   const props: Record<string, any> = {};
   
-  // Match attribute="value" or attribute='value' or attribute={value}
-  const attrRegex = /(\w+)=(?:"([^"]*)"|'([^']*)'|\{([^}]*)\})/g;
+  // Match attribute="value" or attribute='value' or attribute={value} or attribute={{value}}
+  const attrRegex = /(\w+)=(?:"([^"]*)"|'([^']*)'|\{(\{[^}]*\}|[^}]*)\})/g;
   let match;
   
   while ((match = attrRegex.exec(tagContent)) !== null) {
@@ -31,15 +31,21 @@ function extractPropsFromTag(tagContent: string): Record<string, any> {
     } else if (singleQuoteValue !== undefined) {
       value = singleQuoteValue;
     } else if (braceValue !== undefined) {
+      // Handle double braces {{}} by removing outer braces
+      let processedBraceValue = braceValue;
+      if (braceValue.startsWith('{') && braceValue.endsWith('}')) {
+        processedBraceValue = braceValue.slice(1, -1);
+      }
+      
       // Try to parse as JSON for objects/arrays, or as primitives
       try {
-        if (braceValue === 'true') value = true;
-        else if (braceValue === 'false') value = false;
-        else if (/^-?\d+(\.\d+)?$/.test(braceValue)) value = parseFloat(braceValue);
-        else if (braceValue.startsWith('[') || braceValue.startsWith('{')) {
-          value = JSON.parse(braceValue);
+        if (processedBraceValue === 'true') value = true;
+        else if (processedBraceValue === 'false') value = false;
+        else if (/^-?\d+(\.\d+)?$/.test(processedBraceValue)) value = parseFloat(processedBraceValue);
+        else if (processedBraceValue.startsWith('[') || processedBraceValue.startsWith('{')) {
+          value = JSON.parse(processedBraceValue);
         } else {
-          value = braceValue;
+          value = processedBraceValue;
         }
       } catch {
         value = braceValue;
@@ -84,26 +90,59 @@ function findFunctionVisualizerTags(content: string): ComponentMatch[] {
  * Render a FunctionVisualizer component to HTML string
  */
 function renderFunctionVisualizerToHTML(props: Record<string, any>): string {
-  // Validate and set default props
+  // Validate and set default props - handle domain parsing first
+  let parsedDomain: { x: [number, number]; y: [number, number] } = { x: [-5, 5], y: [-5, 5] }; // Default fallback
+  
+  console.log('=== DOMAIN DEBUG in mdxComponentParser ===');
+  console.log('Raw props.domain:', props.domain);
+  console.log('typeof props.domain:', typeof props.domain);
+  console.log('All props:', props);
+  
+  if (props.domain) {
+    if (typeof props.domain === 'string') {
+      console.log('Parsing domain as string:', props.domain);
+      try {
+        const parsed = JSON.parse(props.domain);
+        console.log('Parsed domain object:', parsed);
+        if (parsed && parsed.x && parsed.y && Array.isArray(parsed.x) && Array.isArray(parsed.y)) {
+          parsedDomain = {
+            x: [parsed.x[0] || -5, parsed.x[1] || 5] as [number, number],
+            y: [parsed.y[0] || -5, parsed.y[1] || 5] as [number, number]
+          };
+          console.log('Successfully parsed domain from string:', parsedDomain);
+        } else {
+          console.log('Parsed domain is invalid structure:', parsed);
+        }
+      } catch (error) {
+        console.warn('Failed to parse domain string:', props.domain, error);
+      }
+    } else if (typeof props.domain === 'object' && props.domain.x && props.domain.y) {
+      console.log('Domain is already an object:', props.domain);
+      parsedDomain = {
+        x: Array.isArray(props.domain.x) ? [props.domain.x[0] ?? -5, props.domain.x[1] ?? 5] as [number, number] : [-5, 5],
+        y: Array.isArray(props.domain.y) ? [props.domain.y[0] ?? -5, props.domain.y[1] ?? 5] as [number, number] : [-5, 5]
+      };
+      console.log('Used object domain:', parsedDomain);
+    } else {
+      console.log('Domain object is invalid structure:', props.domain);
+    }
+  } else {
+    console.log('No domain prop found, using default');
+  }
+  
+  console.log('Final parsedDomain:', parsedDomain);
+  
   const validatedProps: FunctionVisualizerProps = {
     function: props.function || props.func || 'x^2 + y^2',
-    domain: props.domain || { x: [-5, 5], y: [-5, 5] },
+    domain: parsedDomain,
     resolution: props.resolution ? parseInt(props.resolution) : 50,
     showWireframe: props.showWireframe === true || props.showWireframe === 'true',
     colorScheme: props.colorScheme || 'viridis',
     height: props.height || '400px',
     cameraPosition: props.cameraPosition || [5, 5, 5],
-    enableControls: props.enableControls !== false && props.enableControls !== 'false'
+    enableControls: props.enableControls !== false && props.enableControls !== 'false',
+    zRange: props.zRange || undefined
   };
-
-  // Parse domain if it's a string
-  if (typeof validatedProps.domain === 'string') {
-    try {
-      validatedProps.domain = JSON.parse(validatedProps.domain);
-    } catch {
-      validatedProps.domain = { x: [-5, 5], y: [-5, 5] };
-    }
-  }
 
   // Parse cameraPosition if it's a string
   if (typeof validatedProps.cameraPosition === 'string') {
@@ -111,6 +150,15 @@ function renderFunctionVisualizerToHTML(props: Record<string, any>): string {
       validatedProps.cameraPosition = JSON.parse(validatedProps.cameraPosition) as [number, number, number];
     } catch {
       validatedProps.cameraPosition = [5, 5, 5];
+    }
+  }
+
+  // Parse zRange if it's a string
+  if (typeof validatedProps.zRange === 'string') {
+    try {
+      validatedProps.zRange = JSON.parse(validatedProps.zRange) as [number, number];
+    } catch {
+      validatedProps.zRange = undefined;
     }
   }
 

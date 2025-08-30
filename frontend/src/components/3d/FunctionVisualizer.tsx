@@ -16,9 +16,26 @@ export const FunctionVisualizer: React.FC<FunctionVisualizerProps> = ({
   colorScheme = 'viridis',
   height = '400px',
   cameraPosition = [5, 5, 5],
-  enableControls = true
+  enableControls = true,
+  zRange
 }) => {
   const [error, setError] = useState<string | null>(null);
+  
+  // Debug log the received props
+  console.log('=== DOMAIN DEBUG in FunctionVisualizer ===');
+  console.log('Received domain prop:', domain);
+  console.log('Function expression:', functionExpression);
+  console.log('All props received:', {
+    function: functionExpression,
+    domain,
+    resolution,
+    showWireframe,
+    colorScheme,
+    height,
+    cameraPosition,
+    enableControls,
+    zRange
+  });
 
   // Parse the mathematical expression
   const mathFunction = useMemo(() => {
@@ -55,8 +72,14 @@ export const FunctionVisualizer: React.FC<FunctionVisualizerProps> = ({
       }
     }
     
+    // Apply Z-range clamping for display bounds if zRange is specified
+    if (zRange) {
+      minZ = Math.max(zRange[0], minZ);
+      maxZ = Math.min(zRange[1], maxZ);
+    }
+    
     return { min: minZ, max: maxZ };
-  }, [mathFunction, domain]);
+  }, [mathFunction, domain, zRange]);
 
   // Error state
   if (error) {
@@ -101,7 +124,7 @@ export const FunctionVisualizer: React.FC<FunctionVisualizerProps> = ({
   return (
     <div className="space-y-4">
       {/* Function info header */}
-      <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
+      <div className="flex flex-wrap gap-2 items-center text-sm text-gray-600 dark:text-gray-400">
         <div>
           Function: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded font-mono">
             f(x,y) = {functionExpression}
@@ -120,7 +143,7 @@ export const FunctionVisualizer: React.FC<FunctionVisualizerProps> = ({
           target: [0, 0, 0],
           enableZoom: enableControls,
           enablePan: enableControls,
-          enableRotate: enableControls
+          enableRotate: true
         }}
       >
         <FunctionMesh
@@ -129,6 +152,7 @@ export const FunctionVisualizer: React.FC<FunctionVisualizerProps> = ({
           resolution={resolution}
           colorScheme={colorScheme}
           showWireframe={showWireframe}
+          zRange={zRange}
         />
       </ThreeCanvas>
 
