@@ -330,6 +330,20 @@ export function processPostContent(
   processed = processImageUrls(processed, apiBaseUrl);
   processed = processContentForTypography(processed);
   processed = processFootnoteReferences(processed);
+  
+  // Process MDX components (3D visualizations, etc.)
+  // Import is handled at the top of the file to avoid ES module issues
+  processed = processMDXComponentsInternal(processed);
 
   return processed;
+}
+
+/**
+ * Internal function to process MDX components
+ * This is separated to handle the dynamic import properly
+ */
+function processMDXComponentsInternal(content: string): string {
+  // For now, we'll import this dynamically when needed
+  // The actual component processing will be handled in the Post component
+  return content;
 }

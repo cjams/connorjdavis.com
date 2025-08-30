@@ -1,11 +1,12 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import type { Post as PostType } from "../types/blog";
 import PostHeader from "./PostHeader";
 import Footnotes from "./Footnotes";
 import TOCMenu from "./TOCMenu";
 import { processPostContent, getTypographyClasses } from "../utils/content";
+import { hydrateMDXComponents, processMDXComponents } from "../utils/mdxComponentParser";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -17,8 +18,11 @@ interface PostProps {
 const Post = ({ post, onTagClick }: PostProps) => {
   // Process content with all enhancements
   const processedContent = useMemo(() => {
-    return processPostContent(post.content || "", API_BASE_URL);
-  }, [post.content]);
+    let content = processPostContent(post.content || "", API_BASE_URL);
+    // Process MDX components (3D visualizations, etc.) - pass components data from backend
+    content = processMDXComponents(content, post.components || []);
+    return content;
+  }, [post.content, post.components]);
 
   // Get typography classes
   const typographyClasses = getTypographyClasses({
@@ -40,6 +44,15 @@ const Post = ({ post, onTagClick }: PostProps) => {
 
     return textContent.trim() && hasLinks;
   }, [post.toc]);
+
+  // Hydrate MDX components after content is rendered
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      hydrateMDXComponents();
+    }, 100); // Small delay to ensure DOM is ready
+
+    return () => clearTimeout(timer);
+  }, [processedContent]);
 
   return (
     <div className="max-w-7xl mx-auto px-10 py-8 bg-background-50">

@@ -13,6 +13,7 @@ import frontmatter
 from typing import List, Optional, Dict, Any
 import threading
 import time
+import os
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -20,6 +21,39 @@ from app.mdx_processor import MDXProcessor
 from app.index_generator import IndexGenerator
 
 app = FastAPI(title="Blog API", version="2.0.0")
+
+# Detect if we're in debug/development mode
+def is_debug_mode():
+    """
+    Detect if the app is running in debug/development mode.
+    Returns True for 'fastapi dev' and False for 'fastapi run'
+    """
+    # Check if we're running with reload (fastapi dev uses --reload)
+    if hasattr(app, 'debug') and app.debug:
+        return True
+    
+    # Check environment variables
+    if os.getenv('FASTAPI_ENV') == 'development':
+        return True
+        
+    # Check if uvicorn is running with reload
+    import sys
+    if '--reload' in sys.argv:
+        return True
+        
+    # Check for common development indicators
+    if os.getenv('DEBUG') == 'true' or os.getenv('DEBUG') == '1':
+        return True
+        
+    # Default to production mode for safety
+    return False
+
+DEBUG_MODE = is_debug_mode()
+print(f"🔧 Running in {'DEBUG' if DEBUG_MODE else 'PRODUCTION'} mode")
+if DEBUG_MODE:
+    print("   → Serving both draft and published content")
+else:
+    print("   → Serving only published content")
 
 # Add CORS middleware
 app.add_middleware(
@@ -186,6 +220,10 @@ async def get_posts(page: Optional[int] = 1, per_page: Optional[int] = 10, limit
     index = load_content_index()
     posts = index['posts']
     
+    # Filter by status: only show published posts in production mode
+    if not DEBUG_MODE:
+        posts = [p for p in posts if p.get('status', 'publish') == 'publish']
+    
     # Filter by tag
     if tag:
         posts = [p for p in posts if tag in p.get('tags', [])]
@@ -227,6 +265,10 @@ async def get_post(slug: str):
             break
     
     if not post_meta:
+        raise HTTPException(status_code=404, detail="Post not found")
+    
+    # In production mode, only serve published posts
+    if not DEBUG_MODE and post_meta.get('status', 'publish') != 'publish':
         raise HTTPException(status_code=404, detail="Post not found")
     
     # Load full content
